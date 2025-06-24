@@ -1,0 +1,5 @@
+# Ignoring Vscode Spec Files
+.vscode
+
+# Ignoring Python Caches
+__pycache__
