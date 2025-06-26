@@ -18,7 +18,9 @@ class Node {
 
         // ==== Getters and Setters
         Node* get_next() const;
+        int get_value() const;
         void set_next(Node* next_node);
+        void set_value(int value);
 
         // ==== Helper functions ====
         // String repr using Output Stream

@@ -14,8 +14,14 @@ Node::~Node() {
 Node* Node::get_next() const {
     return next_ptr;
 }
+int Node::get_value() const {
+    return value;
+}
 void Node::set_next(Node* next_node) {
-    next_ptr = next_node;
+    this->next_ptr = next_node;
+}
+void Node::set_value(int value) {
+    this->value = value;
 }
 
 // ==== Helper functions ====
