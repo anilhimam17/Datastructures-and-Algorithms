@@ -1,4 +1,4 @@
-#include "node.h"
+#include "linear_structures/node.h"
 
 // ==== Legacy ====
 // Constructor

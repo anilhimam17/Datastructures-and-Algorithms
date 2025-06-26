@@ -1,4 +1,4 @@
-#include "sll.h"
+#include "linear_structures/sll.h"
 
 // ==== Legacy ====
 void SLL::free_nodes() {
