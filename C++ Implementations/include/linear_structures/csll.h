@@ -13,7 +13,7 @@ class CSLL {
         int no_of_elements = 0;
 
         // Private Non - Member Function.
-        friend std::ostream operator<<(std::ostream& os, const CSLL& csll);
+        friend std::ostream& operator<<(std::ostream& os, const CSLL& csll);
 
     public:
         // ==== Legacy ====
@@ -36,13 +36,13 @@ class CSLL {
         int search(int value);
 
         // Accesses a given node in the list identified by its index.
-        SharedNode get(int index) const;
+        std::shared_ptr<SharedNode> get(int index);
 
         // Updates the value of a given node in the list identified by its index.
         void set(int value, int index);
 
         // Returns the current last node in the list.
-        SharedNode pop();
+        std::shared_ptr<SharedNode> pop();
 
         // Removes a given node in the list identified by its index.
         void remove(int index);

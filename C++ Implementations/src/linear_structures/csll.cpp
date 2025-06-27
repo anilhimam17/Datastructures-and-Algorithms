@@ -13,7 +13,7 @@ CSLL::~CSLL() {
 }
 
 // ==== Private Non - Member Function ====
-std::ostream operator<<(std::ostream& os, const CSLL& csll) {
+std::ostream& operator<<(std::ostream& os, const CSLL& csll) {
     // Overloaded extraction operator to manage the display of the list.
     if (csll.no_of_elements != 0) {
         auto cursor = csll.head;
@@ -23,11 +23,135 @@ std::ostream operator<<(std::ostream& os, const CSLL& csll) {
             }
             else if (cursor == csll.tail) {
                 os << cursor.get()->get_value() << " <= Tail" << std::endl;
+                break;
             }
             else {
                 os << cursor.get()->get_value() << std::endl;
             }
             cursor = cursor.get()->get_next();
         }
+    } 
+    else {
+        os << "None <= Head" << std::endl;
+        os << "None <= Tail" << std::endl;
+    }
+
+    return os;
+}
+
+void CSLL::append(int value) {
+    // Adds a new node to the end of the list.
+    auto new_node = std::make_shared<SharedNode>(value);
+    if (no_of_elements == 0) {
+        head = new_node;
+        tail = new_node;
+        new_node.get()->set_next(new_node);
+    }
+    else {
+        tail.get()->set_next(new_node);
+        tail = new_node;
+        new_node.get()->set_next(head);
+    }
+    // Updating the no of elements in the list.
+    no_of_elements += 1;
+}
+
+void CSLL::insert(int value, int index) {
+    // Adds a new node at a given index in the list.
+    // Bounds Check
+    if ((index < 0) || (index >= no_of_elements)) {
+        throw std::out_of_range("The requested index is out of range.");
+    }
+    else {
+        std::shared_ptr<SharedNode> new_node = std::make_shared<SharedNode>(value);
+        // Inserting element at the start of the list
+        if (index == 0) {
+            new_node.get()->set_next(head);
+            head = new_node;
+            tail.get()->set_next(new_node);
+        }
+        // Inserting the element at the end of the list
+        else if (index == no_of_elements - 1) {
+            CSLL::append(value);
+        }
+        // Inserting the element at any random location
+        else {
+            std::shared_ptr<SharedNode> cursor = head;
+            for (int i = 0; i < index - 1; i++) {
+                cursor = cursor.get()->get_next();
+            }
+            new_node.get()->set_next(cursor.get()->get_next());
+            cursor.get()->set_next(new_node);
+        }
+        // Updating the no of elements in the list.
+        no_of_elements += 1;
     }
 }
+
+int CSLL::search(int value) {
+    // Searches for a given value in the list and returns the index of the first find.
+    if (!head) {
+        return -1;
+    }
+    auto cursor = head;
+    int i = 0;
+    while(true) {
+        // If hit then returns the index
+        if (cursor.get()->get_value() == value) {
+            return i;
+        }
+        if (cursor == tail) {
+            break;
+        }
+        // Updates the loop control variables
+        cursor = cursor.get()->get_next();
+        i += 1;
+    }
+    // If loop completes then no hit returns -1
+    return -1;
+}
+
+std::shared_ptr<SharedNode> CSLL::get(int index) {
+    // Returns a reference to the node requested
+    // Bounds Check
+    if ((index < 0) || (index >= no_of_elements)) {
+        throw std::out_of_range("The requested index is out of range.");
+    }
+    // Traversing to the requested index
+    auto cursor = head;
+    for (int i = 0; i < index; i++) {
+        cursor = cursor.get()->get_next();
+    }
+    return cursor;
+}
+
+void CSLL::set(int value, int index) {
+    // Updates the value of a given node identified by its index.
+    auto update_node = CSLL::get(index);
+    update_node.get()->set_value(value);
+}
+
+std::shared_ptr<SharedNode> CSLL::pop() {
+    // Removes and returns the last node of the list.
+    if (!head) {
+        throw std::out_of_range("The list is empty no more nodes can be popped.");
+    }
+    std::shared_ptr<SharedNode> popped_node;
+    if (no_of_elements == 1) {
+        popped_node = head;
+        head = nullptr;
+        tail = nullptr;
+    }
+    else {
+        auto previous_ele = CSLL::get(no_of_elements - 2);
+        popped_node = tail;
+        previous_ele->set_next(head);
+        tail = previous_ele;
+    }
+    // Update the no of elements
+    no_of_elements -= 1;
+    popped_node->set_next(nullptr);
+    std::cout << "No of references: " << popped_node.use_count() << std::endl;
+    return popped_node;
+}
+
