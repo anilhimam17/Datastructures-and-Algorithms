@@ -72,3 +72,36 @@ class CSLL:
             tail.next = new_node
             new_node.next = self.head
             self.tail = new_node
+
+        # Updating the no of elements
+        self.no_of_elements += 1
+
+    def insert(self, value: int, index: int):
+        """Inserts the value at a given index in the list."""
+        if index < 0 or index >= self.no_of_elements:
+            raise IndexError("The requested index is out of bounds.")
+        else:
+            # Adds the node at the start of the list.
+            new_node: Node = Node(value)
+            if index == 0:
+                new_node.next = self._head
+                self.head = new_node
+                self._tail.next = self.head
+            # Adds the element at the end of the list.
+            elif index == self.no_of_elements - 1:
+                self.append(value)
+            # Adds the element at any random index of the list.
+            else:
+                cursor = self._head
+                # Traversing to the idx - 1 to add the new node.
+                for _ in range(index - 1):
+                    assert cursor.next is not None, "Cursor cannot be None during traversal."
+                    cursor = cursor.next
+                
+                # Updating the links
+                assert cursor.next is not None, "The next ptr cannot be None in the middle of the list."
+                new_node.next = cursor.next
+                cursor.next = new_node
+
+            # Updating the no of elements
+            self.no_of_elements += 1

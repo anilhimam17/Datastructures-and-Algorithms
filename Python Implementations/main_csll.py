@@ -13,6 +13,16 @@ def main():
     print("Here is the appended CSLL")
     print(first_csll)
 
+    print("Inserting -1000 at 0")
+    first_csll.insert(-1000, 0)
+    print(first_csll)
+    print("Inserting -1000 at 5")
+    first_csll.insert(-1000, 5)
+    print(first_csll)
+    print("Inserting -1000 at 4")
+    first_csll.insert(-1000, 4)
+    print(first_csll)
+
 # ==== Driver Code ====
 if __name__ == "__main__":
     main()
