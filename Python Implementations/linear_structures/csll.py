@@ -105,3 +105,21 @@ class CSLL:
 
             # Updating the no of elements
             self.no_of_elements += 1
+
+    def search():
+        raise NotImplementedError
+    
+    def get():
+        raise NotImplementedError
+    
+    def set():
+        raise NotImplementedError
+    
+    def pop():
+        raise NotImplementedError
+    
+    def remove():
+        raise NotImplementedError
+    
+    def clear():
+        raise NotImplementedError
