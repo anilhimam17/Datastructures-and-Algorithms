@@ -4,7 +4,7 @@ from typing import Any
 # Will add generics after the complete impl.
 class Node:
     """Class that implements the Nodes that compose the elements of the CSLL."""
-    # ==== Legacy ====
+    # ==== Standard Methods ====
     def __init__(self, value: Any):
         self.value = value
         self.next: Node | None = None
@@ -14,7 +14,7 @@ class Node:
 
 class CSLL:
     """Class that implements all the behaviour of the Circular Singly-Linked List."""
-    # ==== Legacy ====
+    # ==== Standard Methods ====
     def __init__(self):
         self.head: Node | None = None
         self.tail: Node | None = None
@@ -149,11 +149,61 @@ class CSLL:
             assert update_node is not None, "The get function cannot return a None."
             update_node.value = value
     
-    def pop():
-        raise NotImplementedError
+    def pop(self):
+        """Removes the very last node from the list and returns it."""
+        if not self.head:
+            raise IndexError("The list is currently empty and has no elements that can be popped.")
+        else:
+            # If only one element is left in the list
+            remove_node: Node | None = None
+            if self.no_of_elements == 1:
+                remove_node = self._head
+                self.head = None
+                self.tail = None
+            else:
+                remove_node = self._tail
+                previous_node = self.get(self.no_of_elements - 2)
+                assert previous_node is not None, "The previous node cannot be none in the middle of the list."
+                previous_node.next = self._head
+                remove_node.next = None
+                self.tail = previous_node
+        
+            # Updating the no of elements in the list.
+            self.no_of_elements -= 1
+            return remove_node
     
-    def remove():
-        raise NotImplementedError
+    def remove(self, index: int):
+        """Removes any node identified by its index in the list."""
+        if index < 0 or index >= self.no_of_elements:
+            raise IndexError("The requested index was out of bounds.")
+        else:
+            remove_node: Node | None = None
+            if index == 0:
+                remove_node = self._head
+                self.head = self._head.next
+                remove_node.next = None
+            elif index == self.no_of_elements - 1:
+                self.pop()
+                return
+            else:
+                remove_node = self.get(index)
+                assert remove_node is not None, "The remove node cannot be none within the bounds of the list."
+                previous_node = self.get(index - 1)
+                assert previous_node is not None, "The previous node cannot be none in the middle of the list."
+                previous_node.next = remove_node.next
+                remove_node.next = None
+
+            # Updating the number of elements in the list
+            self.no_of_elements -= 1
+            del remove_node
+
+            # Updating the pointers if the elements is 0
+            if self.no_of_elements == 0:
+                self.head = None
+                self.tail = None
     
-    def clear():
-        raise NotImplementedError
+    def clear(self):
+        """Clears all the nodes in the list."""
+        self.head = None
+        self.tail = None
+        self.no_of_elements = 0

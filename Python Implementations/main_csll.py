@@ -32,6 +32,24 @@ def main():
     for i in range(first_csll.no_of_elements):
         print(f"Element: {i} -> ", first_csll.get(i))
 
+    print("\nUpdating 0 to 0", first_csll.set(0, 0))
+    print("Updating 7 to 7", first_csll.set(7, 7))
+    print("Updated list:\n", first_csll)
+
+    popped_ele = first_csll.pop()
+    print("\nFirst popped element: ", popped_ele)
+    popped_ele = first_csll.pop()
+    print("Second popped element: ", popped_ele)
+    print(first_csll)
+
+    print("\nRemoving the 3rd element", first_csll.remove(3))
+    print(first_csll)
+    print("\nRemoving the 4th element", first_csll.remove(4))
+    print(first_csll)
+
+    first_csll.clear()
+    print("Cleared CSLL\n", first_csll)
+
 # ==== Driver Code ====
 if __name__ == "__main__":
     main()
