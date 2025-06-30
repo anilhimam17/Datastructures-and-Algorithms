@@ -1,5 +1,15 @@
 #include "linear_structures/csll.h"
 
+// ==== Helper Function ====
+void CSLL::free_nodes() {
+    SharedNode* cursor = head;
+    while (cursor) {
+        SharedNode* next_node = cursor->get_next();
+        delete cursor;
+        cursor = next_node;
+    }
+}
+
 // ==== Legacy ====
 
 // Constructor
@@ -7,6 +17,10 @@ CSLL::CSLL() = default;
 
 // Desctructor
 CSLL::~CSLL() {
+    // Deleting all the DAM nodes
+    CSLL::free_nodes();
+
+    // Resetting the pointers
     head = nullptr;
     tail = nullptr;
     no_of_elements = 0;
@@ -156,5 +170,48 @@ SharedNode* CSLL::pop() {
     no_of_elements -= 1;
     popped_node->set_next(nullptr);
     return popped_node;
+}
+
+void CSLL::remove(int index) {
+    // Removes the node identified by its index.
+    if ((index < 0) || (index >= no_of_elements)) {
+        throw std::out_of_range("The requested index is out of bounds.");
+    }
+    else {
+        SharedNode* remove_node = nullptr;
+
+        // If the node to be removed is the first node.
+        if (index == 0) {
+            remove_node = head;
+            SharedNode* next_node = head->get_next();
+            tail->set_next(next_node);
+            head = next_node;
+        }
+        // If the node to be removed is the last node.
+        else if (index == no_of_elements - 1) {
+            CSLL::pop();
+            return;
+        }
+        // Removing any random node in the middle.
+        else {
+            remove_node = CSLL::get(index);
+            SharedNode* previous_node = CSLL::get(index - 1);
+            previous_node->set_next(remove_node->get_next());
+        }
+
+        // Updating the links of the remove node
+        remove_node->set_next(nullptr);
+
+        // Updating the no of elements in the list.
+        no_of_elements -= 1;
+    }
+}
+
+void CSLL::clear() {
+    // Clears all the elements in the list.
+    CSLL::free_nodes();
+    head = nullptr;
+    tail = nullptr;
+    no_of_elements = 0;
 }
 

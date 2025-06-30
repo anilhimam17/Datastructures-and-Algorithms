@@ -44,5 +44,26 @@ int main(int argc, char const *argv[])
     cout << "Popping the last element: " << *first_csll.pop() << endl;
     cout << first_csll << endl;
 
+    cout << "Appending 5 elements" << endl;
+    for (int i = 1; i < 6; i++) {
+        first_csll.append(i * 10);
+    }
+    cout << "Removing the 0th element" << endl;
+    first_csll.remove(0);
+    cout << first_csll << endl;
+    cout << "Removing the 7th element" << endl;
+    first_csll.remove(7);
+    cout << first_csll << endl;
+    cout << "Removing the 5th element" << endl;
+    first_csll.remove(5);
+    cout << first_csll << endl;
+    cout << "Removing the 3rd element" << endl;
+    first_csll.remove(3);
+    cout << first_csll << endl;
+
+    // cout << "Clearing the list." << endl;
+    // first_csll.clear();
+    // cout << first_csll << endl;
+
     return 0;
 }

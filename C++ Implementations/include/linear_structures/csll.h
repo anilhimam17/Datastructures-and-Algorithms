@@ -24,6 +24,9 @@ class CSLL {
         // Destructor
         ~CSLL();
 
+        // ==== Helper Function ====
+        void free_nodes();
+
         // ==== Member Functions ====
 
         // Adds a new node at the end of the list.
