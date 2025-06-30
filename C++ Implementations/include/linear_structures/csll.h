@@ -8,8 +8,8 @@ class CSLL {
     // Declare the blueprint for a generalised CSLL.
     private:
         // Instance Variables.
-        std::shared_ptr<SharedNode> head = nullptr;
-        std::shared_ptr<SharedNode> tail = nullptr;
+        SharedNode* head = nullptr;
+        SharedNode* tail = nullptr;
         int no_of_elements = 0;
 
         // Private Non - Member Function.
@@ -36,13 +36,13 @@ class CSLL {
         int search(int value);
 
         // Accesses a given node in the list identified by its index.
-        std::shared_ptr<SharedNode> get(int index);
+        SharedNode* get(int index);
 
         // Updates the value of a given node in the list identified by its index.
         void set(int value, int index);
 
         // Returns the current last node in the list.
-        std::shared_ptr<SharedNode> pop();
+        SharedNode* pop();
 
         // Removes a given node in the list identified by its index.
         void remove(int index);

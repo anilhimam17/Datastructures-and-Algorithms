@@ -30,7 +30,7 @@ int main(int argc, char const *argv[])
 
     cout << "Displaying the elements using get:" << endl;
     for (int i = 0; i < 3; i++) {
-        SharedNode node = *first_csll.get(i).get();
+        SharedNode node = *first_csll.get(i);
         cout << "Here is the " << i << "th node: " << node << endl;
     }
 
