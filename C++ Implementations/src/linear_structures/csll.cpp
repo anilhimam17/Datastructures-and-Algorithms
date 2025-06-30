@@ -2,12 +2,14 @@
 
 // ==== Helper Function ====
 void CSLL::free_nodes() {
+    if (!head) return;
     SharedNode* cursor = head;
-    while (cursor) {
+    do {
         SharedNode* next_node = cursor->get_next();
+        cursor->set_next(nullptr);
         delete cursor;
         cursor = next_node;
-    }
+    } while (cursor && cursor != head);
 }
 
 // ==== Legacy ====

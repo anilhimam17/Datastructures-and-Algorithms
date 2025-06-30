@@ -61,9 +61,9 @@ int main(int argc, char const *argv[])
     first_csll.remove(3);
     cout << first_csll << endl;
 
-    // cout << "Clearing the list." << endl;
-    // first_csll.clear();
-    // cout << first_csll << endl;
+    cout << "Clearing the list." << endl;
+    first_csll.clear();
+    cout << first_csll << endl;
 
     return 0;
 }
