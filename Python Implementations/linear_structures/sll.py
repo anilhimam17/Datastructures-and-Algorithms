@@ -145,23 +145,27 @@ class SLL:
         self.no_of_elements -= 1
         return popped_node
         
-    def remove(self, index: int) -> None:
+    def remove(self, index: int) -> Node:
         """Removes the element at any index from the SLL."""
         if index >= self.no_of_elements or index < 0:
             raise IndexError("The index is out of bounds / or the list is empty.")
         
+        # Node that is being removed
+        remove_node: Node
+
         # If the first element is being removed.
         if index == 0:
-            remove_node = self.head
+            remove_node = self._head
             self.head = self._head.next
             assert remove_node is not None, "Node to be removed cannot be none."
             remove_node.next = None
         # If the element being removed is the last.
         elif index == self.no_of_elements - 1:
-            self.pop()
+            return self.pop()
         else:
             # Traversing to search for the penultimate element
             prev_node = self.get(index - 1)
+            assert prev_node.next, "The node before the remove node cannot be none."
             remove_node = prev_node.next
             assert remove_node is not None, "Node to be removed cannot be none."
 
@@ -174,6 +178,9 @@ class SLL:
 
         # Updating the no of elements
         self.no_of_elements -= 1
+
+        # Returning the removed node.
+        return remove_node
 
     def clear(self) -> None:
         """Removes all the elements from the SLL."""
@@ -208,5 +215,5 @@ class SLL:
         """Iterator for the SLL object."""
         cursor = self._head
         while cursor:
-            yield cursor.value
+            yield cursor
             cursor = cursor.next
