@@ -18,8 +18,8 @@ class Queue{
         // ==== Member Functions ====
         void enqueue(int value);
         int dequeue();
-        int peek();
-        bool is_empty();
+        int peek() const;
+        bool is_empty() const;
         void delete_queue();
 
         // Helper functions

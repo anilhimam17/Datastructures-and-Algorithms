@@ -27,5 +27,17 @@ int main(int argc, char const *argv[])
         first_queue.enqueue(i * 10);
     }
     cout << first_queue;
+
+    // Peek.
+    cout << "Current Topmost Element: " << first_queue.peek() << endl;
+    first_queue.dequeue();
+    cout << "New Topmost Element: " << first_queue.peek() << endl;
+
+    // Empty and Delete Ops.
+    cout << "Checking for the queue to be empty " << first_queue.is_empty() << endl;
+    cout << "Deleting the Queue" << endl;
+    first_queue.delete_queue();
+    cout << "Check for the queue to be empty " << first_queue.is_empty() << endl;
+    
     return 0;
 }

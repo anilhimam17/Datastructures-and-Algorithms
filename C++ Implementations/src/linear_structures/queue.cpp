@@ -35,7 +35,7 @@ std::ostream& operator<<(std::ostream& os, const Queue& print_queue) {
                 os << cursor->get_value() << " <= Head" << std::endl;
             }
             else if (cursor == print_queue.tail) {
-                os << cursor->get_next() << " <= Tail" << std::endl;
+                os << cursor->get_value() << " <= Tail" << std::endl;
             }
             else {
                 os << cursor->get_value() << std::endl;
@@ -70,9 +70,13 @@ void Queue::enqueue(int value) {
 
 int Queue::dequeue() {
     // Removes the first elements in the queue and returns it.
-    Node* remove_node = nullptr;
+
+    if (!head) {
+        throw std::out_of_range("The queue is empty and has no elements that can be removed.");
+    }
 
     // If the queue has only one element left.
+    Node* remove_node = nullptr;
     if (no_of_elements == 1) {
         remove_node = head;
         head = nullptr;
@@ -90,4 +94,34 @@ int Queue::dequeue() {
     // Updating the no of elements
     no_of_elements -= 1;
     return remove_node->get_value();
+}
+
+int Queue::peek() const {
+    // Returns the top most element in the Queue.
+    if (!head) {
+        throw std::out_of_range("There are no elements in the list for peek.");
+    }
+    return head->get_value();
+}
+
+bool Queue::is_empty() const {
+    // Returns a boolean for if the Queue is empty.
+    if (no_of_elements == 0)
+        return true;
+    return false;
+}
+
+void Queue::delete_queue() {
+    // Delete the entire queue.
+    Node* cursor = head;
+    while (cursor) {
+        Node* next = cursor->get_next();
+        delete cursor;
+        cursor = next;
+    }
+
+    // Resetting the Pointers and Counter
+    no_of_elements = 0;
+    head = nullptr;
+    tail = nullptr;
 }
