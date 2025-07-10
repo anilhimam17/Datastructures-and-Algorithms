@@ -16,7 +16,7 @@ class GenericNode {
 
         // ==== Overloaded Extraction Operator ====
         friend std::ostream& operator<<(std::ostream& os, const GenericNode<T>& node) {
-            os << "GenericNode(value=" << node.get_value() << ")" << std::endl;
+            os << "GenericNode(value=" << node.get_value() << ")";
             return os;
         }
 
