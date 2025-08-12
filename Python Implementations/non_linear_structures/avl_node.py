@@ -8,7 +8,7 @@ class AVLNode:
         self.value: Any = value
         self.left_child: AVLNode | None = None
         self.right_child: AVLNode | None = None
-        self.height = 0
+        self.height = 1
 
     def __str__(self):
         """Provides a string representation for the AVLNode."""
