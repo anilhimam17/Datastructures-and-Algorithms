@@ -8,7 +8,13 @@ def main():
     
     for i in range(-4, 5):
         first_avl_tree.root = first_avl_tree.add_child(first_avl_tree.root, AVLNode(i))
-        print("External Print after the Balance")
+        print(f"Tree after Adding the Child {i}")
+        print(first_avl_tree.print_tree(first_avl_tree.root))
+
+    nodes_to_del = [4, 0, -1, 2]
+    for node in nodes_to_del:
+        first_avl_tree.root = first_avl_tree.delete_child(first_avl_tree.root, node)
+        print(f"Tree after Removing the Child {node}")
         print(first_avl_tree.print_tree(first_avl_tree.root))
 
 

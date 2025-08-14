@@ -80,6 +80,79 @@ class AVLTree:
         
         # Returning the changed node for Recursive Propagation
         return node
+    
+    def delete_child(self, node: AVLNode | None, delete_value: int):
+        """Deletes a child from the tree."""
+        
+        # Step 1. Deleting the node
+        # If the tree is empty or If left node was reached when searching for the delete value
+        if not node:
+            return node
+        # If the delete value < node: Traversing Left
+        if node.value > delete_value:
+            node.left_child = self.delete_child(node.left_child, delete_value)
+        # If the delete value > node: Traversing Right
+        elif node.value < delete_value:
+            node.right_child = self.delete_child(node.right_child, delete_value)
+        # If the delete value is reached.
+        else:
+            temp: AVLNode | None = None
+
+            # If the delete node has at most one child on the right
+            if node.left_child is None:
+                temp = node.right_child
+
+                # Updating the no of elements
+                self.no_of_elements -= 1
+                return temp
+            
+            # If the delete node has at most one child on the right
+            elif node.right_child is None:
+                temp = node.left_child
+
+                # Updating the no of elements
+                self.no_of_elements -= 1
+                return temp
+            
+            # If the delete node has two children
+            temp = AVLTree.get_minimum_node(node.right_child)
+            node.value = temp.value
+            node.right_child = self.delete_child(node.right_child, temp.value)
+
+        # If the last node in the tree was deleted
+        if not node:
+            return node
+        
+        # Step 2. Updating the height
+        node.height = 1 + max(self.get_height(node.left_child), self.get_height(node.right_child))
+
+        # Step 3. Checking for the need of balancing
+        balance = self.get_balance(node)
+
+        # Step 4. Balancing the tree if the node is unbalanced
+        # Left Heavy Cases
+        if balance > 1 and node.left_child:
+            balance_left = self.get_balance(node.left_child)
+            # LL Condition
+            if balance_left >= 0:
+                return self.right_rotate(node)
+            # LR Condition
+            else:
+                node.left_child = self.left_rotate(node.left_child)
+                return self.right_rotate(node)
+        # Right Heavy Cases
+        if balance < -1 and node.right_child:
+            balance_right = self.get_balance(node.right_child)
+            # RR Condition
+            if balance_right <= 0:
+                return self.left_rotate(node)
+            # RL Condition
+            else:
+                node.right_child = self.right_rotate(node.right_child)
+                return self.left_rotate(node)
+
+        # Returns the updated and balanced node
+        return node            
         
     # ==== Helper Functions ====
     def print_tree(self, node: AVLNode | None, label: str = "Root: ", level: int = 0) -> str:
@@ -117,7 +190,6 @@ class AVLTree:
         
         # If the node is not none.
         return self.get_height(node.left_child) - self.get_height(node.right_child)
-        
 
     def right_rotate(self, disbalanced_node: AVLNode | None):
         """Implements the right rotation for balancing the AVL Tree."""
@@ -158,3 +230,22 @@ class AVLTree:
         new_root.height = 1 + max(self.get_height(new_root.left_child), self.get_height(new_root.right_child))  # type: ignore
 
         return new_root
+    
+    @staticmethod
+    def get_minimum_node(root_node: AVLNode):
+        """Finds the minimum node wrt a given root node."""
+        min_node: AVLNode = root_node
+        while min_node.left_child is not None:
+            min_node = min_node.left_child
+        return min_node
+    
+    def get_remove_node(self, node: AVLNode, value: int):
+        """Finds the node to be removed by value."""
+        if node.value == value:
+            return node
+        elif node.left_child and node.value > value:
+            return self.get_remove_node(node.left_child, value)
+        elif node.right_child and node.value < value:
+            return self.get_remove_node(node.right_child, value)
+        else:
+            raise ValueError("The node to be removed doesn't exist in the tree.")
