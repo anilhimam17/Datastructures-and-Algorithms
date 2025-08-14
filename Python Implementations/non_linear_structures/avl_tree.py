@@ -1,6 +1,6 @@
 from linear_structures.queue_tree import QueueTree
 from non_linear_structures.avl_node import AVLNode
-from typing import Any, Generator
+from typing import Generator
 
 
 class AVLTree:
@@ -42,30 +42,44 @@ class AVLTree:
         2. Applies rotations if needed based on the case of the rotation required.
         """
         # Step 1. Inserting the new node
-        # If the tree is empty.
-        if not self.root:
-            self.root = new_node
+        # If leaf node is reached
+        if not node:
             self.no_of_elements += 1
-            return
+            return new_node
         # Adding the new node as the left child.
-        assert node, "Node cannot be none in the middle of the tree."
         if node.value > new_node.value:
-            if node.left_child:
-                self.add_child(node.left_child, new_node)
-            else:
-                node.left_child = new_node
-                self.no_of_elements += 1
+            node.left_child = self.add_child(node.left_child, new_node)
         # Adding the new node as the right child.
         else:
-            if node.right_child:
-                self.add_child(node.right_child, new_node)
-            else:
-                node.right_child = new_node
-                self.no_of_elements += 1
+            node.right_child = self.add_child(node.right_child, new_node)
+            
+        # Step 2. Updating the height of the nodes based on the backtrack after insertion using recursion.
+        node.height = 1 + max(self.get_height(node.left_child), self.get_height(node.right_child))
 
-        # Step 2. Balancing the Node if necessary
-        self.root.height = max(self.get_height(self.root.left_child), self.get_height(self.root.right_child))
-        balance = self.get_balance(self.root)
+        # Step 3. Get the balance for balancing the tree.
+        balance = self.get_balance(node)
+        
+        # Step 4. Balancing the AVL Tree.
+        # ==== Left - Heavy Cases ====
+        # LL Condition
+        if balance > 1 and node.left_child and new_node.value < node.left_child.value:
+            return self.right_rotate(node)
+        # LR Condition
+        if balance > 1 and node.left_child and new_node.value > node.left_child.value:
+            node.left_child = self.left_rotate(node.left_child)
+            return self.right_rotate(node)
+        
+        # ==== Right Heavy Cases ====
+        # RR Condition
+        if balance < -1 and node.right_child and new_node.value > node.right_child.value:
+            return self.left_rotate(node)
+        # RL Condition
+        if balance < -1 and node.right_child and new_node.value < node.right_child.value:
+            node.right_child = self.right_rotate(node.right_child)
+            return self.left_rotate(node)
+        
+        # Returning the changed node for Recursive Propagation
+        return node
         
     # ==== Helper Functions ====
     def print_tree(self, node: AVLNode | None, label: str = "Root: ", level: int = 0) -> str:
@@ -84,7 +98,7 @@ class AVLTree:
             right = self.print_tree(node.right_child, "R----", level + 1)
         if node.left_child:
             left = self.print_tree(node.left_child, "L----", level + 1)
-        current = "       " * level + f"{label} {node.value}\n"
+        current = "           " * level + f"{label} {node.value}\n"
 
         return right + current + left
 
@@ -144,7 +158,3 @@ class AVLTree:
         new_root.height = 1 + max(self.get_height(new_root.left_child), self.get_height(new_root.right_child))  # type: ignore
 
         return new_root
-    
-
-
-    
