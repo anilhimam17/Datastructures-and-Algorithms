@@ -6,3 +6,19 @@ class Solution:
                 if (nums[i] + nums[j]) == target:
                     return [i, j]
         return []
+    
+    def twoSum_n(self, nums: list[int], target: int) -> list[int]:
+        """
+        Time Complexity O(n): 
+        - Enumeration of Nums O(n).
+        - Iterating through Enumeration to fill up seen with non-dup / updated idx of num O(n).
+        - If pair found with each search of seen then return O(1)."""
+        idx_nums = enumerate(nums)
+        seen = {}
+        for idx, num in idx_nums:
+            diff = target - num
+            if diff not in seen:
+                seen[num] = idx
+            else:
+                return [seen[diff], idx]
+        return []
