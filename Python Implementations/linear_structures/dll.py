@@ -3,6 +3,7 @@ from typing import Any, Generator
 
 class Node:
     """Class implements the new node structure required for Doubly Linked Lists."""
+    
     # ==== Standard Functions ====
     def __init__(self, value: Any) -> None:
         self.prev: Node | None = None
@@ -16,6 +17,7 @@ class Node:
 
 class DLL:
     """Class implements a generalised Doubly Linked List."""
+    
     # ==== Standard Functions ====
     def __init__(self) -> None:
         self.head: Node | None = None
@@ -24,6 +26,7 @@ class DLL:
 
     def __str__(self) -> str:
         """String repr of the DLL."""
+        
         str_repr: str = ""
 
         # If the list is empty
@@ -48,6 +51,7 @@ class DLL:
     
     def __iter__(self) -> Generator[Any, Any, Any]:
         """Provides an iterator for the DLL."""
+        
         if self.head is None:
             raise IndexError("The list doesn't contain any nodes for iteration.")
         else:
@@ -67,17 +71,20 @@ class DLL:
     # ==== Helper Properties ====
     @property
     def _head(self) -> Node:
+        
         assert self.head is not None, "The head is currently None."
         return self.head
     
     @property
     def _tail(self) -> Node:
+        
         assert self.tail is not None, "The tail is currently None."
         return self.tail
     
     # ==== Properties of the DLL ====
     def append(self, value: int) -> None:
         """Adds a new node to the end of the list."""
+        
         new_node: Node = Node(value)
 
         # If the list is empty.
@@ -95,6 +102,7 @@ class DLL:
 
     def insert(self, value: int, index: int) -> None:
         """Adds a node to the given index in the list."""
+        
         if index < 0 or index > self.no_of_elements:
             raise IndexError("The entered index for insertion is out of bounds.")
         else:
@@ -107,8 +115,11 @@ class DLL:
                 self.append(value)
                 return
             else:
+                # Here is Mid is used for efficient traversal direction
                 mid = int(self.no_of_elements / 2)
                 cursor: Node
+
+                # Traversing from the Front: Head
                 if index < mid:
                     cursor = self._head
                     for i in range(mid - 1):
@@ -116,6 +127,7 @@ class DLL:
                             break
                         assert cursor.next is not None, "Cursor cannot be none during traversal for insertion."
                         cursor = cursor.next
+                # Traversing from the Back: Tail
                 else:
                     cursor = self._tail 
                     for i in range(self.no_of_elements - 1, mid - 1, -1):
@@ -136,6 +148,7 @@ class DLL:
 
     def search(self, value: int) -> int:
         """Searches for a value and returns an index of the first occurrence or -1."""
+        
         for idx, node in enumerate(self):
             if node.value == value:
                 return idx
@@ -143,6 +156,7 @@ class DLL:
     
     def get(self, index: int) -> Node:
         """Returns the node at a given index."""
+        
         if index < 0 or index >= self.no_of_elements:
             raise IndexError("The requested index is out of bounds.")
         else:
@@ -151,8 +165,11 @@ class DLL:
             elif index == self.no_of_elements - 1:
                 return self._tail
             else:
+                # Similar Directional Search as Insert
                 mid = int(self.no_of_elements / 2)
                 cursor: Node
+                
+                # Searching from the Front: Head
                 if index < mid:
                     cursor = self._head
                     for i in range(mid - 1):
@@ -160,6 +177,7 @@ class DLL:
                         cursor = cursor.next
                         if i == index:
                             break
+                # Searching from the Back: Tail
                 else:
                     cursor = self._tail 
                     for i in range(self.no_of_elements - 1, mid - 1, -1):
@@ -171,6 +189,7 @@ class DLL:
             
     def set(self, value: int, index: int) -> None:
         """Updates the value of a given node identified by its index."""
+        
         if index < 0 or index >= self.no_of_elements:
             raise IndexError("The requested index is out of bounds.")
         else:
@@ -179,6 +198,7 @@ class DLL:
 
     def pop(self) -> Node:
         """Removes the very last element in the list."""
+        
         if self.head is None:
             raise IndexError("There are no elements remaining in the list that can be popped.")
         else:
@@ -198,8 +218,9 @@ class DLL:
             self.no_of_elements -= 1
             return remove_node
 
-    def remove(self, index: int):
+    def remove(self, index: int) -> None:
         """Removes the node at the specified index from the list."""
+        
         if index < 0 or index >= self.no_of_elements:
             raise IndexError("The requested index is out of bounds.")
         else:
@@ -230,7 +251,7 @@ class DLL:
             # Updating the no of elements in the list
             self.no_of_elements -= 1
 
-    def clear(self):
+    def clear(self) -> None:
         """Clears all the elements in the list."""
         self.head = None
         self.tail = None
