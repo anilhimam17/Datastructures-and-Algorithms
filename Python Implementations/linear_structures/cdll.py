@@ -3,27 +3,33 @@ from typing import Any, Generator
 
 class Node:
     """Implements the Node datastructure for the CDLL with Bi-Directional pointers."""
+    
     # ==== Standard Methods ====
     def __init__(self, value: Any) -> None:
+        
         self.value = value
         self.prev: Node | None = None
         self.next: Node | None = None
 
     def __str__(self) -> str:
         """Provides a string repr of the nodes."""
+        
         return f"Node(value={self.value})"
     
 
 class CDLL:
     """Implements the Circular Doubly Linked List datastructure."""
     # ==== Standard Methods ====
+    
     def __init__(self) -> None:
+        
         self.no_of_elements: int = 0
         self.head: Node | None = None
         self.tail: Node | None = None
     
     def __str__(self) -> str:
         """Provides a str repr of the CDLL."""
+        
         repr_str: str = ""
 
         # If the list is empty
@@ -53,6 +59,7 @@ class CDLL:
     
     def __iter__(self) -> Generator[Any, None, None]:
         """Returns an iterator to the CDLL."""
+        
         if not self.head:
                 raise IndexError("List doesn't contain any elements.")
         else:
@@ -71,16 +78,19 @@ class CDLL:
     # ==== Helper Properties ====
     @property
     def _head(self) -> Node:
+        
         assert self.head, "The head is currently none"
         return self.head
 
     @property
     def _tail(self) -> Node:
+        
         assert self.tail, "The tail is currently none"
         return self.tail
 
     # ==== Properties of the CDLL ====
     def append(self, value: Any) -> None:
+        
         """Adds a new node to the end of the list."""
         new_node: Node = Node(value)
 
@@ -103,6 +113,7 @@ class CDLL:
 
     def insert(self, value: Any, index: int) -> None:
         """Adds a new node to a given index in the list."""
+        
         new_node: Node = Node(value)
 
         # Bounds Check
@@ -151,6 +162,7 @@ class CDLL:
 
     def search(self, value: Any) -> int:
         """Returns the index of the first occurrence of a value in the list else -1."""
+        
         for idx, node in enumerate(self):
             if node.value == value:
                 return idx
@@ -158,6 +170,7 @@ class CDLL:
     
     def get(self, index: int) -> Node:
         """Returns the node identified by its index."""
+        
         # Bounds Check
         if index < 0 or index >= self.no_of_elements:
             raise IndexError("The requested index is out of bounds.")
@@ -192,6 +205,7 @@ class CDLL:
             
     def set(self, value: Any, index: int) -> None:
         """Updates the value of given node identified by its index."""
+        
         if index < 0 or index >= self.no_of_elements:
             raise IndexError("The requested index is out of bounds.")
         else:
@@ -200,6 +214,7 @@ class CDLL:
 
     def pop(self) -> Node:
         """Removes the last node of the list and returns it."""
+        
         if not self.head:
             raise IndexError("The list currently doesn't have any elements that can be popped.")
         else:
@@ -228,6 +243,7 @@ class CDLL:
         
     def remove(self, index: int) -> None:
         """Removes a node at the given index."""
+        
         if index < 0 or index >= self.no_of_elements:
             raise IndexError("The requested index is out of bounds.")
         else:
@@ -267,6 +283,7 @@ class CDLL:
 
     def clear(self):
         """Clears all the elements in the list."""
+        
         self.head = None
         self.tail = None
         self.no_of_elements = 0
