@@ -1,4 +1,4 @@
-from typing import Any, cast
+from typing import Any, Generator, cast
 
 
 class Node:
@@ -18,12 +18,44 @@ class Node:
 
 class SLL:
     """Implements a class that illustrates the properties and functions of a Singly-Linked List."""
+    
+    # ==================== Standard Methods ====================
     def __init__(self) -> None:
         self.head: Node | None = None
         self.tail: Node | None = None
         self.no_of_elements: int = 0
 
-    # Help properties to check for the Noneness of the pointers in the SLL.
+    def __repr__(self) -> str:
+        raise NotImplementedError
+        
+    def __str__(self) -> str:
+        """Provides a string repr of the SLL."""
+        if self.no_of_elements == 0:
+            return f"Current Number of Element: {self.no_of_elements}\nNone <= Head\nNone <= Tail\n"
+        elif self.no_of_elements == 1:
+            return f"Current Number of Element: {self.no_of_elements}\n{self._head.value} <= Head\n{self._tail.value} <= Tail\n"
+        else:
+            cursor = self._head
+            display_str = f"Current Number of Element: {self.no_of_elements}\n"
+            while cursor:
+                if cursor == self.head:
+                    display_str += f"{cursor.value} <= Head\n"
+                elif cursor == self.tail:
+                    display_str += f"{cursor.value} <= Tail\n"
+                else:
+                    display_str += f"{cursor.value}\n"
+                cursor = cursor.next
+
+            return display_str
+        
+    def __iter__(self) -> Generator[Node, Any, Any]:
+        """Iterator for the SLL object."""
+        cursor = self._head
+        while cursor:
+            yield cursor
+            cursor = cursor.next
+
+    # ==================== Helper Properties ====================
     @property
     def _head(self) -> Node:
         assert self.head is not None, "Head is currently none."
@@ -34,6 +66,7 @@ class SLL:
         assert self.tail is not None, "Tail is currently none."
         return self.tail
 
+    # ==================== Semantic Methods ====================
     def append(self, value: Any) -> None:
         """Adds nodes to the end of the SLL."""
         new_node = Node(value)
@@ -187,33 +220,3 @@ class SLL:
         self.head = None
         self.tail = None
         self.no_of_elements = 0
-
-    def __repr__(self) -> str:
-        raise NotImplementedError
-        
-    def __str__(self) -> str:
-        """Provides a string repr of the SLL."""
-        if self.no_of_elements == 0:
-            return f"Current Number of Element: {self.no_of_elements}\nNone <= Head\nNone <= Tail\n"
-        elif self.no_of_elements == 1:
-            return f"Current Number of Element: {self.no_of_elements}\n{self._head.value} <= Head\n{self._tail.value} <= Tail\n"
-        else:
-            cursor = self._head
-            display_str = f"Current Number of Element: {self.no_of_elements}\n"
-            while cursor:
-                if cursor == self.head:
-                    display_str += f"{cursor.value} <= Head\n"
-                elif cursor == self.tail:
-                    display_str += f"{cursor.value} <= Tail\n"
-                else:
-                    display_str += f"{cursor.value}\n"
-                cursor = cursor.next
-
-            return display_str
-        
-    def __iter__(self):
-        """Iterator for the SLL object."""
-        cursor = self._head
-        while cursor:
-            yield cursor
-            cursor = cursor.next
