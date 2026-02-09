@@ -42,10 +42,16 @@ def main():
     print("Second popped element: ", popped_ele)
     print(first_csll)
 
-    print("\nRemoving the 3rd element", first_csll.remove(3))
+    print("\nRemoving the 3rd element")
+    first_csll.remove(3)
     print(first_csll)
-    print("\nRemoving the 4th element", first_csll.remove(4))
+    print("\nRemoving the 4th element")
+    first_csll.remove(4)
     print(first_csll)
+    print("\nRemoving the 0th element")
+    first_csll.remove(0)
+    print(first_csll)
+    print(first_csll._tail.next)
 
     first_csll.clear()
     print("Cleared CSLL\n", first_csll)
