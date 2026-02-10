@@ -1,7 +1,9 @@
 from non_linear_structures.btree_list import BinaryTree
 
+
 # ==== The Main Function ====
 def main():
+
     list_btree = BinaryTree()
 
     print("Adding 5 new children into the Binary Tree.")
