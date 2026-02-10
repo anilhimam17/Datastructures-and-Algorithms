@@ -3,9 +3,13 @@ from typing import Any, Generator
 
 
 class QueueTree:
-    """Implements the behaviours of a Queue using the TreeNode structure."""
+    """Implements a Queue Datastructure as the building for a Binary Tree composed of 
+    TreeNodes. The Queue is implemented using a SLL which abstracts each TreeNode as a
+    regular Node."""
+    
     # ==== Standard Methods ====
     def __init__(self) -> None:
+        
         self.head: Node | None = None
         self.tail: Node | None = None
         self.queue = TreeSLL()
@@ -22,6 +26,7 @@ class QueueTree:
     # ==== Member Functions ====
     def enqueue(self, value: Any) -> None:
         """Adds a new node to the Queue."""
+        
         new_tree_node: TreeNode = value
         
         # Adding the new tree node into the SLL
@@ -37,6 +42,7 @@ class QueueTree:
 
     def dequeue(self) -> Node:
         """Removes the first node from the queue and returns it."""
+        
         remove_node: Node = self.queue.pop_first()
 
         # Updating the pointers of the Queue
@@ -53,12 +59,14 @@ class QueueTree:
 
     def is_empty(self) -> bool:
         """Returns a boolean checking for an empty queue."""
+        
         if self.no_of_elements == 0:
             return True
         return False
     
     def clear(self) -> None:
         """Clears the Queue."""
+        
         self.head = None
         self.tail = None
         self.no_of_elements = 0

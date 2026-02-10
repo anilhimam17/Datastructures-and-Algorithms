@@ -3,6 +3,7 @@ from typing import Any, Generator
 
 class Node:
     """Implements a Node Structure to be used in the LL."""
+    
     # ==== Standard Methods ====
     def __init__(self, value: Any) -> None:
         self.value = value
@@ -14,28 +15,36 @@ class Node:
 
 
 class TreeNode:
-    """Implements the Node Structure specific to the family on Trees in LL style."""
+    """Implements the Node Structure specific to the family on Trees with
+    Linked Lists used as building blocks for efficiency."""
+    
     # ==== Standard Methods ====
     def __init__(self, value: Any) -> None:
+        
         self.value = value
         self.left_child: TreeNode | None = None
         self.right_child: TreeNode | None = None
 
     def __str__(self) -> str:
         """Provides a string representation of the TreeNode."""
+        
         return f"TreeNode(value={self.value})"
     
 
 class TreeSLL:
-    """Implements the Singly - Linked List using the TreeNodes Structure for elements."""
+    """Implements the Singly-Linked List using the TreeNodes Structure as
+    building blocks to efficiently store the elements of a Binary Tree."""
+    
     # ==== Standard Methods ====
     def __init__(self) -> None:
+        
         self.head: Node | None = None
         self.tail: Node | None = None
         self.no_of_elements = 0
 
     def __iter__(self) -> Generator[Any, None, None]:
         """Provides an iterator for the SLL."""
+        
         if not self.head:
             raise IndexError("The list empty, cannot create an iterator.")
         else:
@@ -53,6 +62,7 @@ class TreeSLL:
 
     def __str__(self) -> str:
         """Provides a string repr for the TreeSLL."""
+        
         repr_str: str = ""
 
         if not self.head:
@@ -73,6 +83,7 @@ class TreeSLL:
     # ==== Member Functions ====
     def append(self, value: Any) -> None:
         """Adds a new node to the end of the list."""
+        
         new_node: Node = Node(value)
 
         # If the LL is empty.
@@ -90,6 +101,7 @@ class TreeSLL:
 
     def pop_first(self) -> Node:
         """Removes the first element of the list and returns it."""
+        
         remove_node: Node
 
         # If the LL is empty.
@@ -119,8 +131,9 @@ class TreeSLL:
 
             return remove_node
 
-    def clear(self):
+    def clear(self) -> None:
         """Clears the LL."""
+        
         self.head = None
         self.tail = None
         self.no_of_elements = 0

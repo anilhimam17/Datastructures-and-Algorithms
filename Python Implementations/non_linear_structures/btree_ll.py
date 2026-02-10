@@ -4,20 +4,24 @@ from typing import Any, Generator
 
 
 class BinaryTree:
-    """This class implements all the behaviours of a Binary Tree."""
+    """This class implements the Binary Tree Datastructure."""
+    
     # ==== Standard Methods ====
     def __init__(self) -> None:
+        
         self.root: TreeNode | None = None
         self.no_of_elements: int = 0
         self.frontier = QueueTree()
 
     def __str__(self) -> str:
         """Provides a string repr for the tree."""
+        
         repr_str: str = self.print_tree(self.root)
         return repr_str
     
     def __iter__(self) -> Generator[Any, None, None]:
         """Provides an iterator to traverse the nodes of the Binary Tree in Level Order."""
+        
         if not self.root:
             raise IndexError("Iterator cannot be generated for an empty tree.")
         else:
@@ -28,6 +32,8 @@ class BinaryTree:
             self.frontier.enqueue(self.root)
             current_node: TreeNode
             while not self.frontier.is_empty():
+                """.value is being called to access the TreeNode from the Node structure used
+                by the Queue which constructs SLL."""
                 current_node = self.frontier.dequeue().value
                 yield current_node
 
@@ -40,6 +46,7 @@ class BinaryTree:
     # ==== Member Functions ====
     def print_tree(self, node: TreeNode | None, level: int = 0, label: str = "Root:") -> str:
         """Creates a string repr of the tree."""
+        
         # If the tree is empty.
         if not node:
             return ""
@@ -51,7 +58,9 @@ class BinaryTree:
         return right + curr_str + left
     
     def pre_order_traversal(self, node: TreeNode | None) -> None:
-        """Performs pre order traversal on the Binary Tree."""
+        """Performs pre order traversal on the Binary Tree which follows the order:
+        Root Node -> Left Node -> Right Node."""
+        
         # If the tree is empty.
         if self.no_of_elements == 0:
             raise IndexError("The tree is currently empty.")
@@ -64,7 +73,9 @@ class BinaryTree:
             self.pre_order_traversal(node.right_child)
 
     def in_order_traversal(self, node: TreeNode | None) -> None:
-        """Performs level order traversal on the Binary Tree."""
+        """Performs in order traversal on the Binary Tree which follows the order:
+        Left Node -> Root Node -> Right Node."""
+        
         # If the tree is empty.
         if self.no_of_elements == 0:
             raise IndexError("The tree is currently empty.")
@@ -77,7 +88,9 @@ class BinaryTree:
             self.in_order_traversal(node.right_child)
     
     def post_order_traversal(self, node: TreeNode | None) -> None:
-        """Performs post order traversal on the Binary Tree."""
+        """Performs post order traversal on the Binary Tree which follows the order:
+        Left Node -> Right Node -> Root Node."""
+        
         # If the tree is empty.
         if self.no_of_elements == 0:
             raise IndexError("The tree is currently empty.")
@@ -90,7 +103,9 @@ class BinaryTree:
             print(node)
 
     def level_order_traversal(self) -> None:
-        """Performs level order traversal on the Binary Tree."""
+        """Performs level order traversal on the Binary Tree which follows the
+        standard order of exploration as Breadth First Search."""
+        
         # If the tree is empty.
         if not self.root:
             raise IndexError("The tree is currently empty.")
@@ -113,6 +128,7 @@ class BinaryTree:
 
     def add_child(self, value: Any) -> None:
         """Adds a new child to the tree."""
+        
         new_node: TreeNode = TreeNode(value)
 
         # If the tree is empty
@@ -127,12 +143,15 @@ class BinaryTree:
             current_node: TreeNode
             while not self.frontier.is_empty():
                 current_node = self.frontier.dequeue().value
+                # If vacant location was found in the Left Child (first priority for Complete BTree)
                 if not current_node.left_child:
                     current_node.left_child = new_node
                     break
+                # Else-If vacant location was found in the Right Child
                 elif not current_node.right_child:
                     current_node.right_child = new_node
                     break
+                # Continue traversal till the leaf nodes if needed
                 else:
                     self.frontier.enqueue(current_node.left_child)
                     self.frontier.enqueue(current_node.right_child)
@@ -142,6 +161,7 @@ class BinaryTree:
         
     def search_child(self, value: Any) -> bool:
         """Returns a boolean for the first occurence of the value."""
+        
         for node in self:
             if node.value == value:
                 return True
@@ -153,16 +173,17 @@ class BinaryTree:
     
     def get_child(self, value: Any) -> TreeNode:
         """Returns the treenode for a given value."""
-        get_node: TreeNode
+        
         for node in self:
             if node and node.value == value:
-                get_node = node
-                return get_node
+                return node
         else:
             raise ValueError("The requested value doesn't exist in the tree.")
         
     def get_deepest_node(self) -> TreeNode:
-        """Returns the deepest node in the tree."""
+        """Returns the deepest node in the tree.
+        (helper): Used to replacement node needed during removal of nodes from a BTree."""
+        
         deepest_node: TreeNode | None = None
         for node in self:
             if node:
@@ -171,8 +192,9 @@ class BinaryTree:
         assert deepest_node, "Deepest node cannot be none in Level Order Traversal."
         return deepest_node
     
-    def remove_deepest_node(self, deepest_node: TreeNode):
+    def remove_deepest_node(self, deepest_node: TreeNode) -> None:
         """Prunes the deepest node from the tree."""
+        
         for node in self:
             if node and node.left_child is deepest_node:
                 node.left_child = None
@@ -185,6 +207,7 @@ class BinaryTree:
     
     def remove_child(self, value: Any) -> None:
         """Search for given value in the children of the tree, remove it and return it."""
+        
         if not self.root:
             raise IndexError("The tree has no more children to be removed.")
 
@@ -205,11 +228,3 @@ class BinaryTree:
         remove_node.value = deepest_node.value
         self.remove_deepest_node(deepest_node)
         self.no_of_elements -= 1
-
-
-
-        
-
-        
-
-        

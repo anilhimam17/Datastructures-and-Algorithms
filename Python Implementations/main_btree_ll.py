@@ -2,9 +2,11 @@ from linear_structures.sll_tree import TreeSLL, TreeNode
 from linear_structures.queue_tree import QueueTree
 from non_linear_structures.btree_ll import BinaryTree
 
+
 # ==== Tests ====
-def test_sll_tree():
+def test_sll_tree() -> None:
     """Tests the implementation of the SLL."""
+    
     tree_sll = TreeSLL()
     print(tree_sll)
 
@@ -20,8 +22,9 @@ def test_sll_tree():
         print("Popped Element: ", popped_element)
         print(tree_sll)
 
-def test_queue_tree():
+def test_queue_tree() -> None:
     """Tests the implementation of the Queue tree using SLL."""
+    
     tree_queue: QueueTree = QueueTree()
     print(tree_queue)
 
@@ -46,8 +49,9 @@ def test_queue_tree():
     print(f"Queue Tree 1 is empty ? -> {tree_queue.is_empty()}")
     print(f"Queue Tree 2 is empty ? -> {new_tree_queue.is_empty()}")
 
-def test_btree():
+def test_btree() -> None:
     """Tests the functions and behaviour of the Binary Tree."""
+    
     first_btree = BinaryTree()
 
     print("Adding 6 Children into the BTree.")
@@ -73,11 +77,12 @@ def test_btree():
 
     print("Here is the level-order traversal")
     first_btree.level_order_traversal()
+    print()
     print(first_btree)
 
     print("Searching for 10: ", first_btree.search_child(10))
     print("Searching for 60: ", first_btree.search_child(60))
-    print("Searching for 600: ", first_btree.search_child(600), end="\n")
+    print("Searching for 600: ", first_btree.search_child(600), end="\n\n")
 
     print("Removing 30.")
     first_btree.remove_child(30)
@@ -88,7 +93,8 @@ def test_btree():
 
 
 # ==== The Main Function ====
-def main():
+def main() -> None:
+    
     test_sll_tree()
     print()
     test_queue_tree()
