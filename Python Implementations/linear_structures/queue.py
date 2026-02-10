@@ -3,10 +3,11 @@ from typing import Any
 
 
 class Queue:
-    """Implements the behaviour of a general queue."""
+    """Implements the Queue Data Structure using a Linked List."""
 
     # ==== Standard Methods ====
     def __init__(self) -> None:
+        
         self.head: Node | None = None
         self.tail: Node | None = None
         self.no_of_elements: int = 0
@@ -14,6 +15,7 @@ class Queue:
 
     def __str__(self) -> str:
         """Provides a string representation for the Queue."""
+        
         repr_str: str = ""
 
         # If the queue is empty.
@@ -50,6 +52,7 @@ class Queue:
 
     def dequeue(self) -> Node:
         """Removes the first node for the queue and returns it."""
+        
         remove_node: Node
 
         # If the queue is empty
@@ -66,6 +69,7 @@ class Queue:
     
     def peek(self) -> Node:
         """Returns the top most node in the queue."""
+        
         # If the queue is empty.
         if not self.head:
             raise IndexError("The queue is currently empty, enter new nodes.")
@@ -75,12 +79,14 @@ class Queue:
         
     def is_empty(self) -> bool:
         """Returns a boolean after checking for an empty queue."""
+        
         if not self.head:
             return True
         return False
     
     def delete(self) -> None:
         """Deletes the current queue."""
+        
         self.queue.clear()
         self.head = None
         self.tail = None

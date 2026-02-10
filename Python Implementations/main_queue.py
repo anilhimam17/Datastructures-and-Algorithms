@@ -1,8 +1,10 @@
 from linear_structures.queue import Queue
 from linear_structures.sll import Node
 
+
 # ==== The Main Function ====
 def main() -> None:
+    
     first_queue: Queue = Queue()
     print(first_queue)
 
@@ -36,6 +38,7 @@ def main() -> None:
     print("Clearing the Queue.")
     first_queue.delete()
     print(first_queue)
+
 
 # ==== Driver Code ====
 if __name__ == "__main__":
