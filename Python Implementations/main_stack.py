@@ -2,6 +2,7 @@ from linear_structures.stack import Stack
 
 # The main function
 def main() -> None:
+    
     first_stack = Stack()
     print("Here is the default stack")
     print(first_stack)

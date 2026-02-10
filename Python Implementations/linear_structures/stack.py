@@ -3,13 +3,17 @@ from typing import Any
 
 
 class Stack:
+    """This class implements the Stack Datastructure using a Linked List."""
+    
     def __init__(self) -> None:
+
         self.top: Node | None = None
         self.stack = SLL()
         self.no_of_elements = 0
 
     def __str__(self) -> str:
         """Provides a string repr for the stack."""
+        
         str_repr: str = ""
 
         # If the stack is empty
@@ -27,6 +31,7 @@ class Stack:
 
     def push(self, value: Any) -> None:
         """Append a new node to the top of the stack."""
+        
         if self.no_of_elements == 0:
             self.stack.append(value)
         else:
@@ -40,6 +45,7 @@ class Stack:
 
     def pop(self) -> Node:
         """Returns the top most element of the stack."""
+        
         if not self.top:
             raise IndexError("There are no remaining nodes in the stack that can be popped.")
         else:
@@ -56,12 +62,14 @@ class Stack:
         
     def is_empty(self) -> bool:
         """Returns a boolean checking if the stack is empty."""
+        
         if self.no_of_elements == 0 and not self.top:
             return True
         return False
         
     def peek(self) -> Node:
         """Returns the top most element in the stack."""
+        
         if not self.is_empty():
             assert self.top, "The top of the stack cannot be none for when non-empty."
             return self.top
@@ -70,8 +78,8 @@ class Stack:
         
     def delete(self) -> None:
         """Deletes the stack."""
+        
         self.stack.clear()
         self.top = None
         self.no_of_elements = 0
-
-        
+  
