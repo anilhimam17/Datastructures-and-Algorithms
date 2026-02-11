@@ -5,14 +5,17 @@ from typing import Any, Generator
 
 class BinarySearchTree:
     """Implements the structure and methods of a Binary Search Tree."""
+    
     # ==== Standard Methods ====
     def __init__(self) -> None:
+        
         self.root: TreeNode | None = None
         self.no_of_elements: int = 0
         self.frontier = QueueTree()
 
     def __str__(self) -> str:
         """Provides a string representation of the tree."""
+        
         if not self.root:
             raise IndexError("The Tree is empty, add new element for visualisation.")
         else:
@@ -20,6 +23,7 @@ class BinarySearchTree:
         
     def __iter__(self) -> Generator[TreeNode | None, None, None]:
         """Provides an iterator for the Binary Search tree using level order traversal."""
+        
         if not self.root:
             raise IndexError("The Binary Search Tree is empty, add new elements to generate iterator.")
         
@@ -30,6 +34,7 @@ class BinarySearchTree:
         # Level-Order Traversal
         current_element: TreeNode
         while not self.frontier.is_empty():
+            # By value we are accessing the TreeNode stored in the LL Node used by Queue
             current_element = self.frontier.dequeue().value
             yield current_element
 
@@ -42,6 +47,7 @@ class BinarySearchTree:
     # ==== Helper Functions ====
     def print_tree(self, node: TreeNode, level: int = 0, label: str = "root: ") -> str:
         """Constructs a string representation for the tree."""
+        
         if not node:
             return ""
         
@@ -62,6 +68,7 @@ class BinarySearchTree:
     @staticmethod
     def get_min_value(node: TreeNode) -> TreeNode:
         """Returns the smallest node for minimum value extraction."""
+        
         cursor: TreeNode = node
         while cursor.left_child is not None:
             cursor = cursor.left_child
@@ -70,6 +77,7 @@ class BinarySearchTree:
     # ==== Member Functions ====
     def add_child(self, root_node: TreeNode | None, new_node: TreeNode) -> None:
         """Adds a new child to the tree."""
+        
         # If the tree is empty.
         if not self.root:
             self.root = new_node
@@ -101,7 +109,10 @@ class BinarySearchTree:
                 self.add_child(root_node.right_child, new_node)
 
     def delete_child(self, root_node: TreeNode | None, value: Any) -> TreeNode | None:
-        """Removes a child for the tree identified by the first occurence of the value."""
+        """Removes a child for the tree identified by the first occurence of the value.
+        Traverses from root by default but considers sub-tree during elimination as root and 
+        returns the modified sub-trees with the root elements until the recusion stack ends."""
+        
         # If the tree is empty.
         if not root_node:
             return root_node
@@ -133,16 +144,17 @@ class BinarySearchTree:
                 self.no_of_elements -= 1
                 return temp
             
-            # If the root_has two children
+            # Case - 3: If the root has two children since above cases exhaust 0, 1 child.
             temp = BinarySearchTree.get_min_value(root_node.right_child)
             root_node.value = temp.value
             root_node.right_child = self.delete_child(root_node.right_child, temp.value)
 
-        # Returns the update branch
+        # Returns the update branch: Main Root / Sub-Tree respectively.
         return root_node
 
     def search(self, root_node: TreeNode | None, value: Any) -> bool:
         """Returns a boolean on finding the first occurence of the given element."""
+        
         if not self.root:
             raise IndexError("The tree is empty, add new elements to perform subsequent ops.")
         
@@ -165,6 +177,7 @@ class BinarySearchTree:
     # ==== Tree Traversals ====
     def pre_order(self, root_node: TreeNode | None) -> None:
         """Performs a pre-order traversal on the tree."""
+        
         if not self.root:
             raise IndexError("The tree is empty, add new elements before traversal.")
         
@@ -180,6 +193,7 @@ class BinarySearchTree:
 
     def in_order(self, root_node: TreeNode | None) -> None:
         """Performs a in-order traversal on the tree."""
+        
         if not self.root:
             raise IndexError("The tree is empty, add new elements before traversal.")
         
@@ -195,6 +209,7 @@ class BinarySearchTree:
 
     def post_order(self, root_node: TreeNode | None) -> None:
         """Performs a post-order traversal on the tree."""
+        
         if not self.root:
             raise IndexError("The tree is empty, add new elements before traversal.")
         
