@@ -3,7 +3,7 @@ from non_linear_structures.avl_tree import AVLTree
 
 
 # The main function
-def main():
+def main() -> None:
     first_avl_tree = AVLTree()
     
     for i in range(-4, 5):

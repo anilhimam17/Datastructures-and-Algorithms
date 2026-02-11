@@ -4,19 +4,23 @@ from typing import Generator
 
 
 class AVLTree:
-    """Implements the properties and behaviour of an AVL tree."""
+    """Implements the AVL Tree Datastructure and all of its properties."""
+
     # ==== Standard Methods ====
     def __init__(self) -> None:
+        
         self.root: AVLNode | None = None
         self.no_of_elements: int = 0
         self.frontier: QueueTree = QueueTree()
 
     def __str__(self) -> str:
         """Provides a string representation for the AVL Tree."""
+        
         return self.print_tree(self.root)
     
     def __iter__(self) -> Generator[AVLNode | None, None, None]:
         """Provides an iterator to the AVL Tree using Level Order Traversal."""
+        
         if not self.root:
             raise IndexError("The tree is empty, cannot generate an iterator, add new elements.")
         
@@ -25,6 +29,7 @@ class AVLTree:
         self.frontier.clear()
         self.frontier.enqueue(self.root)
         while not self.frontier.is_empty():
+            # Accessing the value attribute of the Node in SLL to retrieve the stored AVLNode.
             remove_node = self.frontier.dequeue().value
             yield remove_node
 
@@ -35,13 +40,14 @@ class AVLTree:
                 self.frontier.enqueue(remove_node.right_child)
 
     # ==== Member Functions ====
-    def add_child(self, node: AVLNode | None, new_node: AVLNode):
+    def add_child(self, node: AVLNode | None, new_node: AVLNode) -> AVLNode | None:
         """
         Adds a new value to the AVL Tree in two steps:
         1. Finds a vacancy using Binary Search Tree principles.
         2. Applies rotations if needed based on the case of the rotation required.
         """
-        # Step 1. Inserting the new node
+
+        # Step 1. Inserting the new node using BST principles.
         # If leaf node is reached
         if not node:
             self.no_of_elements += 1
@@ -81,7 +87,7 @@ class AVLTree:
         # Returning the changed node for Recursive Propagation
         return node
     
-    def delete_child(self, node: AVLNode | None, delete_value: int):
+    def delete_child(self, node: AVLNode | None, delete_value: int) -> AVLNode | None:
         """Deletes a child from the tree."""
         
         # Step 1. Deleting the node
@@ -157,6 +163,7 @@ class AVLTree:
     # ==== Helper Functions ====
     def print_tree(self, node: AVLNode | None, label: str = "Root: ", level: int = 0) -> str:
         """Provides a string representation for the entire tree."""
+        
         # If the tree is empty.
         if not self.root:
             return "None <= Root"
@@ -175,13 +182,13 @@ class AVLTree:
 
         return right + current + left
 
-    def get_height(self, node: AVLNode | None):
+    def get_height(self, node: AVLNode | None) -> int:
         """Calculates the height of any given node in the AVLTree."""
         if not node:
             return 0
         return node.height
     
-    def get_balance(self, node: AVLNode | None):
+    def get_balance(self, node: AVLNode | None) -> int:
         """Provide the difference of the Height at any given Node."""
         
         # If the node is none.
@@ -191,7 +198,7 @@ class AVLTree:
         # If the node is not none.
         return self.get_height(node.left_child) - self.get_height(node.right_child)
 
-    def right_rotate(self, disbalanced_node: AVLNode | None):
+    def right_rotate(self, disbalanced_node: AVLNode | None) -> AVLNode | None:
         """Implements the right rotation for balancing the AVL Tree."""
         
         # If the disbalanced node is none.
@@ -211,7 +218,7 @@ class AVLTree:
 
         return new_root
     
-    def left_rotate(self, disbalanced_node: AVLNode | None):
+    def left_rotate(self, disbalanced_node: AVLNode | None) -> AVLNode | None:
         """Implements the left rotation for balancing the AVL Tree."""
 
         # If the disbalanced node is none.
@@ -231,16 +238,9 @@ class AVLTree:
 
         return new_root
     
-    @staticmethod
-    def get_minimum_node(root_node: AVLNode):
-        """Finds the minimum node wrt a given root node."""
-        min_node: AVLNode = root_node
-        while min_node.left_child is not None:
-            min_node = min_node.left_child
-        return min_node
-    
-    def get_remove_node(self, node: AVLNode, value: int):
+    def get_remove_node(self, node: AVLNode, value: int) -> AVLNode:
         """Finds the node to be removed by value."""
+        
         if node.value == value:
             return node
         elif node.left_child and node.value > value:
@@ -249,3 +249,13 @@ class AVLTree:
             return self.get_remove_node(node.right_child, value)
         else:
             raise ValueError("The node to be removed doesn't exist in the tree.")
+
+    @staticmethod
+    def get_minimum_node(root_node: AVLNode) -> AVLNode:
+        """Finds the minimum node wrt a given root node."""
+        
+        min_node: AVLNode = root_node
+        while min_node.left_child is not None:
+            min_node = min_node.left_child
+        return min_node
+    
