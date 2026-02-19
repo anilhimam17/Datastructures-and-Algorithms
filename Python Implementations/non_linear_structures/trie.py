@@ -2,60 +2,79 @@ from non_linear_structures.trie_node import TrieNode
 
 
 class Trie:
-    """This structure implements all the properties of a Trie Datastructure."""
+    """This class implements all the properties of a Trie Datastructure."""
 
     def __init__(self) -> None:
-        self.root: TrieNode | None = None
+
+        # Root Node is a Dummy Node by default navigating to different string
+        # through its children instance variable.
+        self.root: TrieNode = TrieNode()
 
     def __str__(self) -> str:
         """Provides a string representation for the Trie."""
         return self.print_trie(self.root)
     
-    def print_trie(self, node: TrieNode | None, level: int = 0) -> str:
+    def print_trie(self, node: TrieNode, label: str = "*", level: int = 0) -> str:
         """Provides a pretty representation of the Trie."""
 
         # If Trie is empty
-        if not self.root:
+        if not self.root.children:
             return "None <= Root"
         
-        assert node, "Trie Node cannot be None in the Middle of the Trie"
+        # Cumulative String for reducing the heirarchy of the Trie Recursively
         current: str = ""
         children: str = ""
 
+        # Base Case: Stops if not children are present at current node
         if node.children:
             for key in node.children.keys():
-                children += self.print_trie(node=node.children[key], level=level+1)
+                # Recursive Case: Keeps Traversing Top-Down till leaf nodes
+                children += self.print_trie(node=node.children[key], label=key, level=level+1)
         
-        current = "         " * level + f"---- {node.value} {node.EOF}\n"
+        current = "       " * 2 * level + f"---- ({label} | {node.EOF})\n"
         return current + children
 
     def insert(self, input_string: str) -> None:
         """Performs the insertion operation to populate the Trie."""
-        
-        # If the Trie is empty
-        if self.root is None:
-            self.root = TrieNode(value=input_string[0])
-        # If the Trie is not empty but Prefix is different
-        if self.root and (input_string[0] not in self.root.value):
-            self.root.value.append(input_string[0])
 
-        # If the Trie is not empty and Prefix matches
-        # Node tracking while traversing the Trie
-        current_node: TrieNode = self.root
-        # Iterating through the characters of the string
-        for i in range(1, len(input_string)):
+        # The input string shouldn't be empty
+        if input_string:
             
-            # Accessing the next character
-            ch: str = input_string[i]
-
-            # If next character already in Trie corpus
-            if ch in current_node.children.keys():
-                current_node = current_node.children[ch]
-            # If next character not in Trie corpus
-            else:
-                current_node.children[ch] = TrieNode(ch)
-                current_node = current_node.children[ch]
+            # Top Most node to begin insertion
+            current_node = self.root
+            
+            # Traversing through the characters of the input string for insertion
+            for ch in input_string:
+                
+                # If the character is not in Current Node's Children
+                if ch not in current_node.children.keys():
+                    current_node.children[ch] = TrieNode()
+                    current_node: TrieNode = current_node.children[ch]
+                # If first character in Current Node's Children
+                else:
+                    current_node: TrieNode = current_node.children[ch]
 
             # Adding EOF
-            if i == len(input_string) - 1:
-                current_node.EOF = True
+            current_node.EOF = True
+    
+    def search(self, input_string: str) -> bool:
+        """Performs the search operation on the Trie to check for
+        the existence of Input String in the Trie's corpus."""
+        
+        # Top Most Node to begin Search
+        current_node: TrieNode = self.root
+
+        # If the Trie is empty
+        if not current_node.children:
+            return False
+        
+        # If the Trie is not empty
+        for ch in input_string:
+            # Check if prefix in current node's children to continue search
+            if ch not in current_node.children:
+                return False
+            else:
+                current_node = current_node.children[ch]
+
+        # If loop successful check for EOF at last character for existence of the word
+        return current_node.EOF
