@@ -23,7 +23,16 @@ def main() -> None:
     print("Searching for words in the Trie")
     for word in search_words:
         print(f"Searching for {word}: ", first_trie.search(word))
-    
+
+    seeds = ["A", "B", "Ba", "An"]
+    print("\n\nChecking autocomplete strings")
+    for seed in seeds:
+        strings = first_trie.starts_with(seed)
+        if strings:
+            print(f"Autocomplete Strings for {seed}:\n", first_trie.starts_with(seed), end="\n\n")
+        else:
+            print("The seed was not in the Trie\n\n")
+
 
 # Driver
 if __name__ == "__main__":

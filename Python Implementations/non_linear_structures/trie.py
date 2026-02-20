@@ -78,3 +78,25 @@ class Trie:
 
         # If loop successful check for EOF at last character for existence of the word
         return current_node.EOF
+    
+    def starts_with(self, input_seed: str) -> list[str] | bool:
+        """Performs the Autocomplete functionality for searching a Trie's corpus
+        based on input_seed to provide suggested list of strings."""
+
+        # Top Most Node to begin Search
+        current_node: TrieNode = self.root
+
+        # If the Trie is empty
+        if not current_node.children:
+            return False
+
+        # Iterating through the Seed to reach the node in the Trie so explore String Suffixes
+        for ch in input_seed:
+            # If the Seed Character not in Children the String doesn't exist in the Trie
+            if ch not in current_node.children:
+                return False
+            else:
+                current_node = current_node.children[ch]
+
+        # List of Strings
+        plausible_strs: list[str] = []
