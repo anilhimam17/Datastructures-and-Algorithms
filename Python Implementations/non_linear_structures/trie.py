@@ -98,5 +98,40 @@ class Trie:
             else:
                 current_node = current_node.children[ch]
 
-        # List of Strings
+        # List to store all the autocomplete substrings
         plausible_strs: list[str] = []
+        
+        # Performing the exploration for all possible strings for the Last TrieNode
+        # by traversing through its children
+        for child in current_node.children:
+            plausible_strs = Trie._find_all_from_node(
+                node=current_node.children[child],
+                current_word_prefix=input_seed + child,
+                words_discovered=plausible_strs
+            )
+        
+        return plausible_strs
+
+    @staticmethod
+    def _find_all_from_node(
+        node: TrieNode,
+        current_word_prefix: str,
+        words_discovered: list[str]
+    ) -> list[str]:
+        """Performs exploration on the Trie from a given node to return all the plausible
+        strings that valid from that node."""
+
+        # Exceptional Case: If the node is the end a word
+        if node.EOF:
+            words_discovered.append(current_word_prefix)
+
+        # Recursive Case: If children still exist from current node
+        for child in node.children:
+            words_discovered = Trie._find_all_from_node(
+                node=node.children[child],
+                current_word_prefix=current_word_prefix + child,
+                words_discovered=words_discovered
+            )
+
+        # Base Case: If no children (reached leaf or backtracking)
+        return words_discovered

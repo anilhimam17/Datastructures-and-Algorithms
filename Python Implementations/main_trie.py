@@ -12,7 +12,10 @@ def main() -> None:
     print("Viewing the Empty Trie")
     print(first_trie, end="\n\n")
 
-    words = ["API", "Barca", "APIs", "Barcelona", "A", "Ba"]
+    words = [
+        "API", "Barca", "APIs", "Barcelona", 
+        "A", "Ba", "Apart", "Apartment"
+    ]
     print("Inseting 4 Words into the Trie")
     for word in words:
         first_trie.insert(word)
@@ -24,12 +27,12 @@ def main() -> None:
     for word in search_words:
         print(f"Searching for {word}: ", first_trie.search(word))
 
-    seeds = ["A", "B", "Ba", "An"]
+    seeds = ["A", "B", "Bar", "An"]
     print("\n\nChecking autocomplete strings")
     for seed in seeds:
         strings = first_trie.starts_with(seed)
         if strings:
-            print(f"Autocomplete Strings for {seed}:\n", first_trie.starts_with(seed), end="\n\n")
+            print(f"Autocomplete Strings for {seed}:\n", strings, end="\n\n")
         else:
             print("The seed was not in the Trie\n\n")
 
