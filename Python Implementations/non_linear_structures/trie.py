@@ -12,14 +12,16 @@ class Trie:
 
     def __str__(self) -> str:
         """Provides a string representation for the Trie."""
-        return self.print_trie(self.root)
-    
-    def print_trie(self, node: TrieNode, label: str = "*", level: int = 0) -> str:
-        """Provides a pretty representation of the Trie."""
 
         # If Trie is empty
         if not self.root.children:
             return "None <= Root"
+
+        # If Trie is not empty
+        return self.print_trie(self.root)
+    
+    def print_trie(self, node: TrieNode, label: str = "*", level: int = 0) -> str:
+        """Provides a pretty representation of the Trie."""
         
         # Cumulative String for reducing the heirarchy of the Trie Recursively
         current: str = ""
@@ -47,7 +49,7 @@ class Trie:
             for ch in input_string:
                 
                 # If the character is not in Current Node's Children
-                if ch not in current_node.children.keys():
+                if ch not in current_node.children:
                     current_node.children[ch] = TrieNode()
                     current_node: TrieNode = current_node.children[ch]
                 # If first character in Current Node's Children
@@ -100,15 +102,13 @@ class Trie:
 
         # List to store all the autocomplete substrings
         plausible_strs: list[str] = []
-        
-        # Performing the exploration for all possible strings for the Last TrieNode
-        # by traversing through its children
-        for child in current_node.children:
-            plausible_strs = Trie._find_all_from_node(
-                node=current_node.children[child],
-                current_word_prefix=input_seed + child,
-                words_discovered=plausible_strs
-            )
+
+        # Performing the exploration for all possible strings from the Last TrieNode
+        plausible_strs = Trie._find_all_from_node(
+            node=current_node,
+            current_word_prefix=input_seed,
+            words_discovered=plausible_strs
+        )
         
         return plausible_strs
 
