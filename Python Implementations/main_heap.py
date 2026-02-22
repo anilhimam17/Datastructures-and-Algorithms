@@ -14,7 +14,7 @@ def main():
         first_heap.insert(i)
         print(f"\nInserted Node: {i}")
         print("Tree after insertion")
-        print(f"Root by structure: {first_heap.root}")
+        print(f"Root by structure: {first_heap.heap_list[1]}")
         print(first_heap)
 
     print("\nHeap List after all the insertions")
@@ -26,7 +26,7 @@ def main():
     for i in range(2):
         print(f"\nExtracting the {i + 1} root node: {first_heap.extract()}")
         print("\nThe Heap after extraction")
-        print(f"Root by structure: {first_heap.root}")
+        print(f"Root by structure: {first_heap.peek()}")
         print(first_heap)
     
     print("\nHeap after all the extractions")
@@ -37,7 +37,7 @@ def main():
         first_heap.insert(i * 10)
         print(f"\nInserted Node: {i * 10}")
         print("Tree after insertion")
-        print(f"Root by structure: {first_heap.root}")
+        print(f"Root by structure: {first_heap.peek()}")
         print(first_heap)
 
     print("\nHeap after all the insertions")

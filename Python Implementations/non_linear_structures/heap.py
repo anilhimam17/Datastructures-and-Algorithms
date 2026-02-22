@@ -7,7 +7,6 @@ class Heap:
     # ==== Standard Methods ====
     def __init__(self, heap_size: int, heap_type: str = "min") -> None:
         
-        self.root = None
         self.heap_list: list[int | None] = [None] * (heap_size + 1)
         self.max_heap_size = heap_size
         self.current_heap_size = 1
@@ -49,7 +48,7 @@ class Heap:
     def peek(self) -> int | None:
         """Returns the topmost element of the heap."""
         
-        return self.root
+        return self.heap_list[1]
     
     def insert(self, new_value: int) -> None:
         """Inserts a new element into the heap by following the standard of a BTree.
@@ -63,9 +62,8 @@ class Heap:
             raise OverflowError("The max heap size has exceeded")
 
         # If the heap is empty
-        if self.root is None:
+        if self.heap_list[1] is None:
             self.heap_list[self.current_heap_size] = new_value
-            self.root = self.heap_list[self.current_heap_size]
             self.current_heap_size += 1
             return
         
@@ -79,32 +77,25 @@ class Heap:
             elif self.heap_list[(i * 2) + 1] is None:
                 self.heap_list[(i * 2) + 1] = new_value
                 break
-        
-        # Updating the current heap size on insertion
-        self.current_heap_size += 1
 
         # Heapifying the insertion into the list
         self._heapify_insert(
-            current_index=self.current_heap_size - 1,
+            current_index=self.current_heap_size,
             heap_type=self.heap_type
         )
-
-        # Updating the root at the end of heapify
-        self.root = self.heap_list[1]
+        
+        # Updating the current heap size on insertion
+        self.current_heap_size += 1
         return
     
     def _heapify_insert(self, current_index: int, heap_type: str) -> None:
         """Performs the Heapify operation to balance the nodes of the Heap
-        after an insertion."""
-
-        # At the level of the leaf node
-        if current_index >= self.current_heap_size:
-            return
+        after an insertion by Bubbling up the new value based on Heap Type."""
 
         # Accessing the Parent to Back-Track for any swaps necessary in the Hierarchy
         parent_index: int = current_index // 2
 
-        # At the level of root node with no other nodes in the heap
+        # Base Case: At the level of root node with no other nodes in the heap
         if parent_index < 1:
             return
 
@@ -123,7 +114,7 @@ class Heap:
                 self.heap_list[current_index], self.heap_list[parent_index]
             )
 
-        # Heapifying the Swapped New Node further (if needed)
+        # Recursive Case: Heapifying the Swapped New Node further (if needed)
         self._heapify_insert(current_index=parent_index, heap_type=heap_type)
         return
     
@@ -136,48 +127,44 @@ class Heap:
         - In a Heap only the root node can be extracted and not just any sub-node."""
 
         # If the Heap is empty
-        if self.root is None:
+        if self.heap_list[1] is None:
             raise IndexError("The Heap is empty, add elements before extraction")
         
         extract_node: int = 0
 
         # If only the root node in Heap
         if self.current_heap_size == 2:
-            extract_node = self.root
+            extract_node = self.heap_list[1]
             self.heap_list[self.current_heap_size - 1] = None
         # If more than one node in the Heap
         else:
-            extract_node = self.root
+            extract_node = self.heap_list[1]
 
             # Replacing the root with the deepest node
             self.heap_list[1] = self.heap_list[self.current_heap_size - 1]
             self.heap_list[self.current_heap_size - 1] = None
-            self.root = self.heap_list[1]
 
             # Heapifying to balance the new root node
             self._heapify_extract(current_index=1)
         
         # Updating the Heap Size
         self.current_heap_size -= 1
-
-        # Updating the root node
-        self.root = self.heap_list[1]
         return extract_node
     
-    def _heapify_extract(self, current_index: int):
-        """Performs the Heapify operation to balance the nodes of the heap 
-        after an extraction."""
+    def _heapify_extract(self, current_index: int) -> None:
+        """Performs the Heapify operation to balance the nodes of the Heap 
+        after an extraction by Bubbling down the new value based on the Heap Type."""
 
         # Accessing the Parent
         parent = self.heap_list[current_index]
 
         # Accessing the Immediate Children from Root
-        if current_index * 2 < self.current_heap_size:
+        if current_index * 2 < self.current_heap_size - 1:
             left_child_idx = current_index * 2
             left_child = self.heap_list[left_child_idx]
         else:
             return
-        if (current_index * 2) + 1 < self.current_heap_size:
+        if (current_index * 2) + 1 < self.current_heap_size - 1:
             right_child_idx = (current_index * 2) + 1
             right_child = self.heap_list[right_child_idx]
         else:
