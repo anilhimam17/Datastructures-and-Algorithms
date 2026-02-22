@@ -30,11 +30,13 @@ def main() -> None:
     seeds = ["A", "B", "Bar", "An"]
     print("\n\nChecking autocomplete strings")
     for seed in seeds:
-        strings = first_trie.starts_with(seed)
-        if strings:
-            print(f"Autocomplete Strings for {seed}:\n", strings, end="\n\n")
-        else:
-            print("The seed was not in the Trie\n\n")
+        try:
+            strings = first_trie.starts_with(seed)
+            print(strings)
+        except ValueError:
+            continue
+        except IndexError:
+            continue
 
     print(first_trie)
     print("\n\nDeleting words from the Trie")

@@ -81,7 +81,7 @@ class Trie:
         # If loop successful check for EOF at last character for existence of the word
         return current_node.EOF
     
-    def starts_with(self, input_seed: str) -> list[str] | bool:
+    def starts_with(self, input_seed: str) -> list[str]:
         """Performs the Autocomplete functionality for searching a Trie's corpus
         based on input_seed to provide suggested list of strings."""
 
@@ -90,13 +90,13 @@ class Trie:
 
         # If the Trie is empty
         if not current_node.children:
-            return False
+            raise IndexError("The Trie is current empty, insert words before searching autocompletes")
 
         # Iterating through the Seed to reach the node in the Trie so explore String Suffixes
         for ch in input_seed:
             # If the Seed Character not in Children the String doesn't exist in the Trie
             if ch not in current_node.children:
-                return False
+                raise ValueError("The Trie structure doesn't match input seed")
             else:
                 current_node = current_node.children[ch]
 
@@ -145,12 +145,7 @@ class Trie:
             return False
 
         # Begin traversal from the top to prune nodes and update the children
-        should_prune = Trie._prune_nodes_for_word(node=self.root.children[word[0]], word=word, depth=0)
-
-        # Pruning the node from root's children is satisfied
-        if should_prune:
-            del self.root.children[word[0]]
-
+        Trie._prune_nodes_for_word(node=self.root, word=word, depth=-1)
         return True
     
     @staticmethod
