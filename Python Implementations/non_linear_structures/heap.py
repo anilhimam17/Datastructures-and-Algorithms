@@ -67,16 +67,8 @@ class Heap:
             self.current_heap_size += 1
             return
         
-        # Traversing the Heap to find a vacancy before Heapify
-        for i in range(1, self.current_heap_size + 1):
-            # If left child is empty
-            if self.heap_list[i * 2] is None:
-                self.heap_list[i * 2] = new_value
-                break
-            # If right child is empty
-            elif self.heap_list[(i * 2) + 1] is None:
-                self.heap_list[(i * 2) + 1] = new_value
-                break
+        # If not empty add the new value to the last available spot before heapifying
+        self.heap_list[self.current_heap_size] = new_value
 
         # Heapifying the insertion into the list
         self._heapify_insert(
