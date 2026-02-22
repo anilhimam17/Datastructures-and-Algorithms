@@ -36,6 +36,17 @@ def main() -> None:
         else:
             print("The seed was not in the Trie\n\n")
 
+    print(first_trie)
+    print("\n\nDeleting words from the Trie")
+    delete_words = ["A", "Ba", "Barcelona", "Apartment", "Anil"]
+    for word in delete_words:
+        print(f"Deleting {word}")
+        res = first_trie.delete(word)
+        if res:
+            print(first_trie)
+        else:
+            print("The delete word was not found in the Trie")
+
 
 # Driver
 if __name__ == "__main__":

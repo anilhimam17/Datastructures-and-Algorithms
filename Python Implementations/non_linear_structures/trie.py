@@ -135,3 +135,48 @@ class Trie:
 
         # Base Case: If no children (reached leaf or backtracking)
         return words_discovered
+
+    def delete(self, word: str) -> bool:
+        """Performs the deletion operation on the Trie to remove a given word
+        without affecting the semantic structure of the Trie for the other words."""
+
+        # Check if the word exists in the Trie
+        if not self.search(word):
+            return False
+
+        # Begin traversal from the top to prune nodes and update the children
+        should_prune = Trie._prune_nodes_for_word(node=self.root.children[word[0]], word=word, depth=0)
+
+        # Pruning the node from root's children is satisfied
+        if should_prune:
+            del self.root.children[word[0]]
+
+        return True
+    
+    @staticmethod
+    def _prune_nodes_for_word(
+        node: TrieNode, 
+        word: str,
+        depth: int
+    ) -> bool:
+        """Prunes the nodes of the Trie that represent a given word."""
+
+        # Base Case: Reached the end of the word
+        if depth == len(word) - 1:
+            node.EOF = False
+            return True if not (node.children or node.EOF) else False
+        
+        # Recursive Case: Walking down the depth of the Trie for the Word
+        next_ch = word[depth + 1]
+        should_prune_child = Trie._prune_nodes_for_word(
+            node=node.children[next_ch],
+            word=word,
+            depth=depth + 1
+        )
+
+        # Updating the children in the Parent
+        if should_prune_child:
+            del node.children[next_ch]
+
+        # Assessing the Parent for Further Deletion upstream
+        return True if not (node.children or node.EOF) else False
