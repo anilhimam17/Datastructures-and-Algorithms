@@ -2,13 +2,13 @@ from non_linear_structures.hash_structure import Hash
 
 
 def main() -> None:
-    first_hash = Hash()
+    first_hash = Hash(collision_resolution_technique="Linear Probing")
 
-    print("Inserting 5 elements into the Hash Structure")
-    for i in range(5):
+    print("Inserting 15 elements into the Hash Structure")
+    for i in range(15):
         char = chr(65 + i)
         print("Inserting: ", char)
-        first_hash.insert(key=char, value=i)
+        first_hash.insert(key=char, value="")
 
     print("\n\nHash Structure after Insertion")
     print(first_hash)

@@ -2,7 +2,7 @@ from collections.abc import Callable
 from typing import Any
 
 from non_linear_structures.hash_utils import COLLISION_RESOLUTION_MAP
-from linear_structures.sll import SLL
+from linear_structures.sll import SLL, Node
 
 
 class Hash:
@@ -35,6 +35,8 @@ class Hash:
         if collision_resolution_technique == "Direct Chaining":
             self.hash_table = [SLL() for _ in range(self.table_size)]
         # Creating a Hash Table of Empty Tuples
+        elif collision_resolution_technique == "Quadratic Probing":
+            self.hash_table = [(None, None) for _ in range(self.table_size * 2)]
         else:
             self.hash_table = [(None, None) for _ in range(self.table_size)]
 
@@ -49,7 +51,7 @@ class Hash:
 
     # ==== Helper Functions ====
     @staticmethod
-    def _get_collision_method(method_name: str) -> Callable:
+    def _get_collision_method(method_name: str) -> Callable[[int, Any, Any, list], None]:
         """Validates the Collision Resolution Method passed during Initialisation."""
 
         # If collision method valid
@@ -75,12 +77,49 @@ class Hash:
         hash_index = self._get_index(hash_value_raw)
         
         # Logging the State to view the Collision Handling
-        print(f"Digest Value: {hash_value_raw}, Hash Index: {hash_index}")
+        print(f"Digest Value: {hash_value_raw}, Initial Hash Index: {hash_index}")
         
         # Inserting the Value into the Hash Table
-        self.collision_resolution_method(
-            hash_index=hash_index,
-            key_to_insert=key,
-            value_to_insert=value,
-            hash_table=self.hash_table
-        )
+        try:
+            self.collision_resolution_method(
+                hash_index,
+                key,
+                value,
+                self.hash_table
+            )
+        except OverflowError:
+            print("The Hash Table is currently full extending the table to insert the value.")
+            
+            # Increasing the size by multiple of 2
+            self.table_size *= 2
+
+            # Copying over the key value pairs from the old hash table
+            new_hash_table = [(None, None) for _ in range(self.table_size)]
+
+            # Recalculating the Hash Digest for each of the Key Value pairs
+            for k, v in self.hash_table:
+                
+                # Skipping the None pairs
+                if k is None:
+                    continue  
+           
+                re_calc_raw_hash_value = self.hash_function(k)
+                re_calc_hash_index = self._get_index(hash_value=re_calc_raw_hash_value)
+                self.collision_resolution_method(
+                    re_calc_hash_index,
+                    k,
+                    v,
+                    new_hash_table
+                )
+
+            # Updating the Instance-Level Hash Table and Size
+            self.hash_table = new_hash_table
+
+            # Retrying the insertion
+            new_hash_index = self._get_index(self.hash_function(key))
+            self.collision_resolution_method(
+                new_hash_index,
+                key,
+                value,
+                self.hash_table
+            )
