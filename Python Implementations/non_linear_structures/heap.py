@@ -27,7 +27,6 @@ class Heap:
         
         return self.print_tree(index=1)
     
-    # ==== Helper Methods ====
     def print_tree(self, index: int, level: int = 0, label: str = "Root") -> str:
         """Provides a pretty printed string representation of the tree."""
         
@@ -80,36 +79,6 @@ class Heap:
         self.current_heap_size += 1
         return
     
-    def _heapify_insert(self, current_index: int, heap_type: str) -> None:
-        """Performs the Heapify operation to balance the nodes of the Heap
-        after an insertion by Bubbling up the new value based on Heap Type."""
-
-        # Accessing the Parent to Back-Track for any swaps necessary in the Hierarchy
-        parent_index: int = current_index // 2
-
-        # Base Case: At the level of root node with no other nodes in the heap
-        if parent_index < 1:
-            return
-
-        # Checking the values to ensure not unbound
-        assert isinstance(self.heap_list[parent_index], int), "Parent Node cannot be none in the middle of the Heap"
-        assert isinstance(self.heap_list[current_index], int), "Current Node cannot be none after insertion"
-
-        # If Min Heap
-        if heap_type == "min" and (self.heap_list[parent_index] > self.heap_list[current_index]):  # type: ignore
-            self.heap_list[parent_index], self.heap_list[current_index] = (
-                self.heap_list[current_index], self.heap_list[parent_index]
-            )
-        # If Max Heap
-        if heap_type == "max" and (self.heap_list[parent_index] < self.heap_list[current_index]):  #type: ignore
-            self.heap_list[parent_index], self.heap_list[current_index] = (
-                self.heap_list[current_index], self.heap_list[parent_index]
-            )
-
-        # Recursive Case: Heapifying the Swapped New Node further (if needed)
-        self._heapify_insert(current_index=parent_index, heap_type=heap_type)
-        return
-    
     def extract(self) -> int:
         """Returns the root node after extracting it from the Heap. It then balances 
         the Heap through Heapify after choosing the deepest node in the Heap as the 
@@ -142,6 +111,37 @@ class Heap:
         # Updating the Heap Size
         self.current_heap_size -= 1
         return extract_node
+    
+    # ==== Helper Functions ====
+    def _heapify_insert(self, current_index: int, heap_type: str) -> None:
+        """Performs the Heapify operation to balance the nodes of the Heap
+        after an insertion by Bubbling up the new value based on Heap Type."""
+
+        # Accessing the Parent to Back-Track for any swaps necessary in the Hierarchy
+        parent_index: int = current_index // 2
+
+        # Base Case: At the level of root node with no other nodes in the heap
+        if parent_index < 1:
+            return
+
+        # Checking the values to ensure not unbound
+        assert isinstance(self.heap_list[parent_index], int), "Parent Node cannot be none in the middle of the Heap"
+        assert isinstance(self.heap_list[current_index], int), "Current Node cannot be none after insertion"
+
+        # If Min Heap
+        if heap_type == "min" and (self.heap_list[parent_index] > self.heap_list[current_index]):  # type: ignore
+            self.heap_list[parent_index], self.heap_list[current_index] = (
+                self.heap_list[current_index], self.heap_list[parent_index]
+            )
+        # If Max Heap
+        if heap_type == "max" and (self.heap_list[parent_index] < self.heap_list[current_index]):  #type: ignore
+            self.heap_list[parent_index], self.heap_list[current_index] = (
+                self.heap_list[current_index], self.heap_list[parent_index]
+            )
+
+        # Recursive Case: Heapifying the Swapped New Node further (if needed)
+        self._heapify_insert(current_index=parent_index, heap_type=heap_type)
+        return
     
     def _heapify_extract(self, current_index: int) -> None:
         """Performs the Heapify operation to balance the nodes of the Heap 
@@ -217,4 +217,3 @@ class Heap:
             raise ValueError("Heap Type or Heap Structure is invalid")
 
         return
-

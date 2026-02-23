@@ -4,6 +4,7 @@ from non_linear_structures.trie_node import TrieNode
 class Trie:
     """This class implements all the properties of a Trie Datastructure."""
 
+    # ==== Standard Methods ====
     def __init__(self) -> None:
 
         # Root Node is a Dummy Node by default navigating to different string
@@ -36,6 +37,7 @@ class Trie:
         current = "       " * 2 * level + f"---- ({label} | {node.EOF})\n"
         return current + children
 
+    # ==== Member Functions ====
     def insert(self, input_string: str) -> None:
         """Performs the insertion operation to populate the Trie."""
 
@@ -112,6 +114,19 @@ class Trie:
         
         return plausible_strs
 
+    def delete(self, word: str) -> bool:
+        """Performs the deletion operation on the Trie to remove a given word
+        without affecting the semantic structure of the Trie for the other words."""
+
+        # Check if the word exists in the Trie
+        if not self.search(word):
+            return False
+
+        # Begin traversal from the top to prune nodes and update the children
+        Trie._prune_nodes_for_word(node=self.root, word=word, depth=-1)
+        return True
+    
+    # ==== Helper Functions ====
     @staticmethod
     def _find_all_from_node(
         node: TrieNode,
@@ -135,18 +150,6 @@ class Trie:
 
         # Base Case: If no children (reached leaf or backtracking)
         return words_discovered
-
-    def delete(self, word: str) -> bool:
-        """Performs the deletion operation on the Trie to remove a given word
-        without affecting the semantic structure of the Trie for the other words."""
-
-        # Check if the word exists in the Trie
-        if not self.search(word):
-            return False
-
-        # Begin traversal from the top to prune nodes and update the children
-        Trie._prune_nodes_for_word(node=self.root, word=word, depth=-1)
-        return True
     
     @staticmethod
     def _prune_nodes_for_word(

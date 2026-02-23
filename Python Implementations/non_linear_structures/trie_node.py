@@ -1,6 +1,7 @@
 class TrieNode:
     """This class implements the node structure used to build Tries."""
 
+    # ==== Standard Methods ====
     def __init__(self) -> None:
         self.children: dict[str, TrieNode] = {}
         self.EOF: bool = False
