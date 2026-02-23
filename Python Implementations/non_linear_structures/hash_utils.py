@@ -44,6 +44,17 @@ def quadratic_probing(
     """Applies the Quadratic Probing Method to resolve a collision that 
     has occurred during Hashing."""
 
+    table_len = len(hash_table)
+    current_index = hash_index
+
+    # If hash index is not empty, traverse quadratically to find the next free location
+    for i in range(table_len):
+        if hash_table[current_index] == (None, None):
+            hash_table[current_index] = (key_to_insert, value_to_insert)
+            return
+        current_index = (hash_index + int(i ** 2)) % table_len
+    raise OverflowError
+
 def double_hashing(
         hash_index: int, 
         key_to_insert: Any,

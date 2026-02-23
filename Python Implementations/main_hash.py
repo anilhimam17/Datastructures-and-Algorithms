@@ -2,10 +2,10 @@ from non_linear_structures.hash_structure import Hash
 
 
 def main() -> None:
-    first_hash = Hash(collision_resolution_technique="Linear Probing")
+    first_hash = Hash(collision_resolution_technique="Quadratic Probing")
 
-    print("Inserting 15 elements into the Hash Structure")
-    for i in range(15):
+    print("Inserting 25 elements into the Hash Structure")
+    for i in range(25):
         char = chr(65 + i)
         print("Inserting: ", char)
         first_hash.insert(key=char, value="")

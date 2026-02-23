@@ -2,7 +2,7 @@ from collections.abc import Callable
 from typing import Any
 
 from non_linear_structures.hash_utils import COLLISION_RESOLUTION_MAP
-from linear_structures.sll import SLL, Node
+from linear_structures.sll import SLL
 
 
 class Hash:
@@ -35,8 +35,9 @@ class Hash:
         if collision_resolution_technique == "Direct Chaining":
             self.hash_table = [SLL() for _ in range(self.table_size)]
         # Creating a Hash Table of Empty Tuples
+        # Double sized for Quadratic due larger quadratically growing indexes
         elif collision_resolution_technique == "Quadratic Probing":
-            self.hash_table = [(None, None) for _ in range(self.table_size * 2)]
+            self.hash_table = [(None, None) for _ in range(self.table_size)]
         else:
             self.hash_table = [(None, None) for _ in range(self.table_size)]
 
