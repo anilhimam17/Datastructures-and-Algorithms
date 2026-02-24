@@ -35,9 +35,10 @@ class Hash:
         if collision_resolution_technique == "Direct Chaining":
             self.hash_table = [SLL() for _ in range(self.table_size)]
         # Creating a Hash Table of Empty Tuples
-        # Double sized for Quadratic due larger quadratically growing indexes
         elif collision_resolution_technique == "Quadratic Probing":
-            self.hash_table = [(None, None) for _ in range(self.table_size * 2)]
+            # Double sized for Quadratic due larger quadratically growing indexes
+            self.table_size *= 2
+            self.hash_table = [(None, None) for _ in range(self.table_size)]
         else:
             self.hash_table = [(None, None) for _ in range(self.table_size)]
 
@@ -46,6 +47,29 @@ class Hash:
 
         hash_table_str = [str(self.hash_table[i]) for i in range(self.table_size)]
         return "\n".join(hash_table_str)
+    
+    def __len__(self) -> int:
+        """Provides the no of non-null elements present in the Hash Structure."""
+
+        # If Direct Chaining is being used
+        if isinstance(self.hash_table[0], SLL):
+            count = sum(
+                [
+                    self.hash_table[i].no_of_elements  # type: ignore
+                    for i in range(self.table_size)
+                ]
+            ) 
+            return count
+        # If Open Addressing is being used
+        count = sum([1 if self.hash_table[i] != (None, None) else 0 for i in range(self.table_size)])
+        return count
+    
+    @property
+    def load_factor(self) -> float:
+        """Provides the Number of Elements to Hash Table ratio to improve downstream
+        efficiency of the Hash Structure."""
+
+        return len(self) / self.table_size
 
     # ==== Helper Functions ====
     @staticmethod
@@ -64,9 +88,75 @@ class Hash:
 
         return hash_value % self.table_size
     
+    def _resize_hash_table_sll(self) -> None:
+        """Resizes the Hash Table using Direct Chaining for better operational efficiency."""
+
+        # New Hash Table to copy the elements
+        new_hash_table = [SLL() for _ in range(self.table_size)]
+        for hash_bucket in self.hash_table:
+            assert isinstance(hash_bucket, SLL), "Hash Bucket in Direct Chaining has to be an LL."
+
+            # Skipping Null Entries
+            if hash_bucket.head is None:
+                continue
+            
+            # Traversing the elements of the Hash Bucket for new insertion
+            for node in hash_bucket:
+                key, value = node.value
+                initial_hash_index = self._get_index(hash_value=self.hash_function(key))
+                self.collision_resolution_method(
+                    initial_hash_index,
+                    key,
+                    value,
+                    new_hash_table
+                )
+
+        # Updating the Instance-Level Hash Table to the newly resized Hash Table
+        self.hash_table = new_hash_table
+
+    def _resize_hash_table_tuple(self) -> None:
+        """Resizes the Hash Table using Open Addressing for better operational efficiency."""
+
+        # New Hash Table to copy the elements
+        new_hash_table = [(None, None) for _ in range(self.table_size)]
+        
+        # Traversing the Hash Table for new insertion
+        for hash_bucket in self.hash_table:
+            assert isinstance(hash_bucket, tuple), "Hash Bucket in Open Addressing has to be an Tuple."
+
+            # Skipping Null Entries
+            if hash_bucket == (None, None):
+                continue
+            
+            key, value = hash_bucket
+            intial_hash_index = self._get_index(hash_value=self.hash_function(key))
+            self.collision_resolution_method(
+                intial_hash_index,
+                key,
+                value,
+                new_hash_table
+            )
+
+        # Updating the Instance-Level Hash Table to the newly resized Hash Table
+        self.hash_table = new_hash_table
+    
     # ==== Member Methods ====
     def insert(self, key: Any, value: Any) -> None:
         """Inserts any value into the Hash Table by calculating the Hash Value."""
+        
+        # Resizing the Hash Table proactively to improve efficiency
+        if self.load_factor >= 0.7:
+            print("Resizing the Hash Table since the Load Factor condition was triggered.")
+
+            # Increasing Table Size
+            self.table_size *= 2
+
+            # If Direct Chaining is being used
+            if isinstance(self.hash_table[0], SLL):
+                self._resize_hash_table_sll()
+            # If Open Addressing is being used
+            else:
+                self._resize_hash_table_tuple()
 
         # Generates the Hash Value
         hash_value_raw = hash(key)
@@ -88,35 +178,16 @@ class Hash:
         except OverflowError:
             print("The Hash Table is currently full extending the table to insert the value.")
             
-            # Increasing the size by multiple of 2
-            self.table_size *= 2
+            # Resizing the Hash Tables on Overflow
+            if isinstance(self.hash_table[0], SLL):
+                self._resize_hash_table_sll()
+            else:
+                self._resize_hash_table_tuple()
 
-            # Copying over the key value pairs from the old hash table
-            new_hash_table = [(None, None) for _ in range(self.table_size)]
-
-            # Recalculating the Hash Digest for each of the Key Value pairs
-            for k, v in self.hash_table:
-                
-                # Skipping the None pairs
-                if k is None:
-                    continue  
-           
-                re_calc_raw_hash_value = self.hash_function(k)
-                re_calc_hash_index = self._get_index(hash_value=re_calc_raw_hash_value)
-                self.collision_resolution_method(
-                    re_calc_hash_index,
-                    k,
-                    v,
-                    new_hash_table
-                )
-
-            # Updating the Instance-Level Hash Table and Size
-            self.hash_table = new_hash_table
-
-            # Retrying the insertion
-            new_hash_index = self._get_index(self.hash_function(key))
+            # Retrying the Insertion
+            new_intial_hash_index = self._get_index(hash_value=self.hash_function(key))
             self.collision_resolution_method(
-                new_hash_index,
+                new_intial_hash_index,
                 key,
                 value,
                 self.hash_table
