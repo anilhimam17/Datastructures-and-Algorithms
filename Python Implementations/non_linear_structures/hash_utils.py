@@ -1,12 +1,14 @@
 from typing import Any
 
+from linear_structures.sll import SLL
+
 
 # ==== Collision Resolution Methods ====
 def direct_chaining(
         hash_index: int,
         key_to_insert: Any,
         value_to_insert: Any,
-        hash_table: list
+        hash_table: list[SLL]
     ) -> None:
     """Applies the Direct Chaining Method to resolve a collision that 
     has occurred during Hashing."""
@@ -38,7 +40,7 @@ def quadratic_probing(
         hash_index: int,
         key_to_insert: Any,
         value_to_insert: Any,
-        hash_table: list
+        hash_table: list[tuple[Any, Any]]
     ) -> None:
     """Applies the Quadratic Probing Method to resolve a collision that 
     has occurred during Hashing."""
