@@ -7,12 +7,12 @@
 
 
 ## Current Status:
-- [ ] 🧑‍🔧 Affective immediately the entire codebase is being reviewed and scaffolded for the progress so far.
+- [x] 🧑‍🔧 Affective immediately the entire codebase is being reviewed and scaffolded for the progress so far.
 
 - 🏗️ Working on improving the codebase of algorithms to contain positively by the end of this month:
-    - [ ] Tries
-    - [ ] Hashing Algorithms
-    - [ ] Search Algorithms
+    - [x] Tries
+    - [x] Hashing Algorithms
+    - [ ] Search Algorithms 🏗️
     - [ ] Sorting Algorithms
     - [ ] Graph Algorithms
     - [ ] Greedy Algorithms
