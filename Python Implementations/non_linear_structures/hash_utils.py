@@ -1,4 +1,3 @@
-from collections.abc import Callable
 from typing import Any
 
 
@@ -55,23 +54,10 @@ def quadratic_probing(
         current_index = (hash_index + int(i ** 2)) % table_len
     raise OverflowError
 
-def double_hashing(
-        hash_index: int, 
-        key_to_insert: Any,
-        value_to_insert: Any, 
-        hash_table: list,
-        hash_fn_a: Callable = linear_probing,
-        hash_fn_b: Callable = quadratic_probing
-    ) -> None:
-    """Applies the Double Hashing Method to resolve a collision that 
-    has occured during Hashing by combining the results of more than 
-    one hash function."""
-
 
 # ==== Mapping the Functions ====
 COLLISION_RESOLUTION_MAP = {
     "Direct Chaining": direct_chaining,
     "Linear Probing": linear_probing,
     "Quadratic Probing": quadratic_probing,
-    "Double Hashing": double_hashing
 }

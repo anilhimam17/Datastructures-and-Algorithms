@@ -37,18 +37,15 @@ class Hash:
         # Creating a Hash Table of Empty Tuples
         # Double sized for Quadratic due larger quadratically growing indexes
         elif collision_resolution_technique == "Quadratic Probing":
-            self.hash_table = [(None, None) for _ in range(self.table_size)]
+            self.hash_table = [(None, None) for _ in range(self.table_size * 2)]
         else:
             self.hash_table = [(None, None) for _ in range(self.table_size)]
 
     def __str__(self) -> str:
         """Provides a string representation for the Hash Structure."""
 
-        hash_table_str = ""
-        for i in range(self.table_size):
-            hash_table_str += str(self.hash_table[i]) + "\n"
-
-        return hash_table_str
+        hash_table_str = [str(self.hash_table[i]) for i in range(self.table_size)]
+        return "\n".join(hash_table_str)
 
     # ==== Helper Functions ====
     @staticmethod
@@ -136,7 +133,6 @@ class Hash:
 
         # If Direct Chaning is being used
         if self.collision_resolution_method == COLLISION_RESOLUTION_MAP["Direct Chaining"]:
-            
             # Accessing the SLL
             hash_bucket = self.hash_table[hash_index]
             assert isinstance(hash_bucket, SLL), "Hash Bucket in Direct Chaining has to be a LL."
@@ -146,8 +142,47 @@ class Hash:
                 k, v = node.value
                 if k == key:
                     return v
+            
             raise KeyError("The given key was not found in the Hash Structure")
+        
         # If Open Addressing is being used
-        # Linear Probing
-        # elif self.collision_resolution_method == COLLISION_RESOLUTION_MAP["Linear Probing"]:
+        # Accessing the Initial Hash Index to check K, V pair
+        hash_bucket = self.hash_table[hash_index]
+        assert isinstance(hash_bucket, tuple), "Hash Bucket in Open Addressing has to be a Tuple."
 
+        # Linear Probing
+        if self.collision_resolution_method == COLLISION_RESOLUTION_MAP["Linear Probing"]:
+            # If initial index holds the correct key
+            if hash_bucket[0] == key:
+                return hash_bucket[1]
+            # Carry out linear probing to find the correct key
+            else:
+                current_index = hash_index
+                
+                for _ in range(self.table_size):
+                    current_index = (current_index + 1) % self.table_size
+                    hash_bucket = self.hash_table[current_index]
+                    assert isinstance(hash_bucket, tuple), "Hash Bucket in Open Addressing has to be a Tuple."
+
+                    if hash_bucket[0] == key:
+                        return hash_bucket[1]
+                
+                raise KeyError("The given key was not found in the Hash Structure")
+        # Quadratic Probing
+        else:
+            # If initial index holds the correct key
+            if hash_bucket[0] == key:
+                return hash_bucket[1]
+            # Carry out quadratic probing to find the correct key
+            else:
+                current_index = hash_index
+                
+                for i in range(self.table_size):
+                    current_index = (hash_index + int(i ** 2)) % self.table_size
+                    hash_bucket = self.hash_table[current_index]
+                    assert isinstance(hash_bucket, tuple), "Hash Bucket in Open Addressing has to be a Tuple."
+
+                    if hash_bucket[0] == key:
+                        return hash_bucket[1]
+                
+                raise KeyError("The given key was not found in the Hash Structure")
