@@ -124,3 +124,30 @@ class Hash:
                 value,
                 self.hash_table
             )
+
+    def __getitem__(self, key: Any) -> Any:
+        """Performs the access operation to access the stored values in the Hash Structure."""
+
+        # Calculating the raw hash value
+        hash_value_raw = self.hash_function(key)
+
+        # Calculating the hash index
+        hash_index = self._get_index(hash_value=hash_value_raw)
+
+        # If Direct Chaning is being used
+        if self.collision_resolution_method == COLLISION_RESOLUTION_MAP["Direct Chaining"]:
+            
+            # Accessing the SLL
+            hash_bucket = self.hash_table[hash_index]
+            assert isinstance(hash_bucket, SLL), "Hash Bucket in Direct Chaining has to be a LL."
+            
+            # Traversing the SLL till the right Key, Value pair is found
+            for node in hash_bucket:
+                k, v = node.value
+                if k == key:
+                    return v
+            raise KeyError("The given key was not found in the Hash Structure")
+        # If Open Addressing is being used
+        # Linear Probing
+        # elif self.collision_resolution_method == COLLISION_RESOLUTION_MAP["Linear Probing"]:
+
