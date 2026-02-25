@@ -19,7 +19,7 @@ def main() -> None:
     sort_performance = {}
 
     # Iterating through the sorting algorithms
-    sorting_algorithms = ["bubble_sort", "selection_sort"]
+    sorting_algorithms = ["bubble_sort", "selection_sort", "insertion_sort"]
     for algo_name in sorting_algorithms:
 
         # Accessing the Sorting Algorithm
@@ -38,6 +38,9 @@ def main() -> None:
         # Viewing the first 50 elements
         print(f"\nIn Ascending Order {algo_name}:")
         print(ascending_list[:50])
+
+        # Reshuffling the list
+        random.shuffle(input_list)
         
         # Applying the Sorting Algorithm for Descending Order
         st_2 = time.time()
