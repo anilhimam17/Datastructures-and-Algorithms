@@ -32,7 +32,7 @@ def main() -> None:
         et_1 = time.time()
 
         # Checking the sorted list
-        if not all(ascending_list[i] < ascending_list[i + 1] for i in range(len(ascending_list) - 1)):
+        if not all(ascending_list[i] <= ascending_list[i + 1] for i in range(len(ascending_list) - 1)):
             raise ValueError(f"Ascending List for {algo_name} wasn't sorted")
         
         # Viewing the first 50 elements
@@ -48,7 +48,7 @@ def main() -> None:
         et_2 = time.time()
         
         # Checking the sorted list
-        if not all(descending_list[i] > descending_list[i + 1] for i in range(len(descending_list) - 1)):
+        if not all(descending_list[i] >= descending_list[i + 1] for i in range(len(descending_list) - 1)):
             raise ValueError(f"Descending List for {algo_name} wasn't sorted")
         
         # Viewing the first 50 elements

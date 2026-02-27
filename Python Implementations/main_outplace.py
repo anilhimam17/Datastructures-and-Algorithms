@@ -13,9 +13,12 @@ def main() -> None:
     # Randomised list of elements for sorting
     input_list = [i for i in range(100000)]
     random.shuffle(input_list)
+
+    print("\nList before sorting first 50 of 100000 elements:")
+    print(input_list[:50])
     
     # Sort Algorithm names
-    sort_algorithms = ["bucket_sort", "merge_sort"]
+    sort_algorithms = ["bucket_sort", "merge_sort", "heap_sort"]
 
     # Dictionary to store the performance of the sort algorithms
     sort_performance = {}
@@ -35,7 +38,7 @@ def main() -> None:
         et_1 = time.time()
         
         # Checking the sort
-        if not all(ascending_list[i] < ascending_list[i + 1] for i in range(len(ascending_list) - 1)):
+        if not all(ascending_list[i] <= ascending_list[i + 1] for i in range(len(ascending_list) - 1)):
             raise ValueError("The list was not properly sorted in ascending order.")
         print("\nFirst 50 elements of the sorted array:")
         print(ascending_list[:50])
@@ -46,7 +49,7 @@ def main() -> None:
         descending_list = sort_algo(input_list, "descending")
         et_2 = time.time()
 
-        if not all(descending_list[i] > descending_list[i + 1] for i in range(len(descending_list) - 1)):
+        if not all(descending_list[i] >= descending_list[i + 1] for i in range(len(descending_list) - 1)):
             raise ValueError("The list was not properly sorted in descending order.")
         print("\nFirst 50 elements of the sorted array:")
         print(descending_list[:50])
