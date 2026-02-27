@@ -4,6 +4,8 @@ from collections.abc import Callable
 import math
 import operator
 
+from non_linear_structures.heap import Heap
+
 
 class OutOfPlace:
     """The class implements the semantic structure that house Out-Of-Place
@@ -19,6 +21,8 @@ class OutOfPlace:
             return self.bucket_sort
         elif method_name == "merge_sort":
             return self.merge_sort
+        elif method_name == "heap_sort":
+            return self.heap_sort
         else:
             raise ValueError("The provided method name for the sorting algorithm is invalid.")
     
@@ -131,3 +135,22 @@ class OutOfPlace:
             merged_list.extend(left_list[i:])
         
         return merged_list
+
+    def heap_sort(self, input_list: list, order: str) -> list:
+        """Performs heap sort on the input list and returns the input list."""
+
+        sorted_list = []
+        
+        # Min Heap
+        heap_type = "min" if order == "ascending" else "max"
+        heap_ = Heap(heap_size=len(input_list) + 1, heap_type=heap_type)
+        
+        # Inserting the elements into the Heap
+        for ele in input_list:
+            heap_.insert(ele)
+        
+        # Inserting the elements into the Heap
+        for _ in input_list:
+            sorted_list.append(heap_.extract())
+
+        return sorted_list
