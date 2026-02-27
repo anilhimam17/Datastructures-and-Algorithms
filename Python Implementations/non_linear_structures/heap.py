@@ -149,70 +149,53 @@ class Heap:
 
         # Accessing the Parent
         parent = self.heap_list[current_index]
+        
+        # Accessing the Immediate Children from Root for swap candidates
+        candidates = []
 
-        # Accessing the Immediate Children from Root
-        if current_index * 2 < self.current_heap_size - 1:
-            left_child_idx = current_index * 2
-            left_child = self.heap_list[left_child_idx]
-        else:
-            return
-        if (current_index * 2) + 1 < self.current_heap_size - 1:
-            right_child_idx = (current_index * 2) + 1
-            right_child = self.heap_list[right_child_idx]
-        else:
+        # If Left Child in bound and exists
+        if (
+            current_index * 2 < self.current_heap_size and 
+            self.heap_list[current_index * 2] is not None
+        ):
+            swap_index = current_index * 2
+            candidates.append([self.heap_list[swap_index], swap_index])
+        # If Right Child in bound and exists
+        if (
+            (current_index * 2) + 1 < self.current_heap_size and 
+            self.heap_list[(current_index * 2) + 1] is not None
+        ):
+            swap_index = (current_index * 2) + 1
+            candidates.append([self.heap_list[swap_index], swap_index])
+        
+        # If candidates is empty reach leaf node
+        if not candidates:
             return
 
-        # Checking the values to ensure not unbound
-        assert parent, "Parent cannot be none after checking heap size"
+        # Finalising the Swap Candidate
+        if self.heap_type == "min":
+            swap_item = min(candidates, key=lambda x: x[0])
+        else:
+            swap_item = max(candidates, key=lambda x: x[0])
 
         # If Min Heap
         if self.heap_type == "min":
-            # If both children are available
-            if left_child and right_child:
-                swap_child_idx = left_child_idx if left_child < right_child else right_child_idx
-                swap_child = self.heap_list[swap_child_idx]
-                if swap_child < parent:  # type: ignore
-                    self.heap_list[current_index], self.heap_list[swap_child_idx] = (
-                        self.heap_list[swap_child_idx], self.heap_list[current_index]
-                    )
-
-                    # Heapifying the Swapped New Node further (if needed)
-                    self._heapify_extract(current_index=swap_child_idx)
-            # If only one child is available
-            else:
-                swap_child_idx = left_child_idx if left_child_idx else right_child_idx
-                swap_child = self.heap_list[swap_child_idx]
-                if swap_child < parent:  # type: ignore
-                    self.heap_list[current_index], self.heap_list[swap_child_idx] = (
-                        self.heap_list[swap_child_idx], self.heap_list[current_index]
-                    )
-
-                    # Heapifying the Swapped New Node further (if needed)
-                    self._heapify_extract(current_index=swap_child_idx)
+            swap_child, swap_child_idx = swap_item
+            if swap_child < parent:
+                self.heap_list[current_index], self.heap_list[swap_child_idx] = (
+                    self.heap_list[swap_child_idx], self.heap_list[current_index]
+                )
+                # Heapifying the Swapped New Node further (if needed)
+                self._heapify_extract(current_index=swap_child_idx)
         # If Max Heap
         elif self.heap_type == "max":
-            # If both children are available
-            if left_child and right_child:
-                swap_child_idx = left_child_idx if left_child > right_child else right_child_idx
-                swap_child = self.heap_list[swap_child_idx]
-                if swap_child > parent:  # type: ignore
-                    self.heap_list[current_index], self.heap_list[swap_child_idx] = (
-                        self.heap_list[swap_child_idx], self.heap_list[current_index]
-                    )
-
-                    # Heapifying the Swapped New Node further (if needed)
-                    self._heapify_extract(current_index=swap_child_idx)
-            # If only one child is available
-            else:
-                swap_child_idx = left_child_idx if left_child_idx else right_child_idx
-                swap_child = self.heap_list[swap_child_idx]
-                if swap_child > parent:  # type: ignore
-                    self.heap_list[current_index], self.heap_list[swap_child_idx] = (
-                        self.heap_list[swap_child_idx], self.heap_list[current_index]
-                    )
-
-                    # Heapifying the Swapped New Node further (if needed)
-                    self._heapify_extract(current_index=swap_child_idx)
+            swap_child, swap_child_idx = swap_item
+            if swap_child > parent:
+                self.heap_list[current_index], self.heap_list[swap_child_idx] = (
+                    self.heap_list[swap_child_idx], self.heap_list[current_index]
+                )
+                # Heapifying the Swapped New Node further (if needed)
+                self._heapify_extract(current_index=swap_child_idx)
         else:
             raise ValueError("Heap Type or Heap Structure is invalid")
 
