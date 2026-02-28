@@ -12,9 +12,9 @@
 - 🏗️ Working on improving the codebase of algorithms to contain positively by the end of this month:
     - [x] Tries
     - [x] Hashing Algorithms
-    - [ ] Search Algorithms 🏗️
-    - [ ] Sorting Algorithms
-    - [ ] Graph Algorithms
+    - [x] Sorting Algorithms
+    - [x] Search Algorithms
+    - [ ] Graph Algorithms 🏗️
     - [ ] Greedy Algorithms
     - [ ] Divide and Conquer Algorithms
     - [ ] Dynamic Programming
