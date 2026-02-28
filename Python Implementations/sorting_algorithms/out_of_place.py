@@ -89,12 +89,18 @@ class OutOfPlace:
 
         # Sorting and Merging the partitions during backtracking
         merged_list = []
-        merged_list.extend(OutOfPlace._merge(left_list=list_partition_left, right_list=list_partition_right, order=order))
+        merged_list.extend(
+            OutOfPlace._merge_helper(
+                left_list=list_partition_left, 
+                right_list=list_partition_right, 
+                order=order
+            )
+        )
 
         return merged_list
 
     @staticmethod
-    def _merge(left_list: list, right_list: list, order: str) -> list:
+    def _merge_helper(left_list: list, right_list: list, order: str) -> list:
         """Helper method to aid merge sort by sort the partitions of the list 
         and merging them back into a single 1D list."""
 
@@ -137,7 +143,8 @@ class OutOfPlace:
         return merged_list
 
     def heap_sort(self, input_list: list, order: str) -> list:
-        """Performs heap sort on the input list and returns the input list."""
+        """Performs heap sort on the input list by leveraging the Binary Heap Tree
+        sourced in the non_linear structures module and returns the input list."""
 
         sorted_list = []
         
