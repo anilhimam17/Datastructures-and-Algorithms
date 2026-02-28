@@ -19,7 +19,7 @@ def main() -> None:
     sort_performance = {}
 
     # Iterating through the sorting algorithms
-    sorting_algorithms = ["bubble_sort", "selection_sort", "insertion_sort"]
+    sorting_algorithms = ["bubble_sort", "selection_sort", "insertion_sort", "quick_sort"]
     for algo_name in sorting_algorithms:
 
         # Accessing the Sorting Algorithm

@@ -8,7 +8,7 @@ from sorting_algorithms.out_of_place import OutOfPlace
 def main() -> None:
 
     # Instance of the Out of Place Sorting object
-    sort_handle = OutOfPlace(auxilary_sort_algo=InPlace.insertion_sort)
+    sort_handle = OutOfPlace(auxilary_sort_algo=InPlace.quick_sort)
 
     # Randomised list of elements for sorting
     input_list = [i for i in range(100000)]
@@ -18,7 +18,7 @@ def main() -> None:
     print(input_list[:50])
     
     # Sort Algorithm names
-    sort_algorithms = ["bucket_sort", "merge_sort", "heap_sort"]
+    sort_algorithms = ["bucket_sort", "merge_sort", "heap_sort", "quick_sort"]
 
     # Dictionary to store the performance of the sort algorithms
     sort_performance = {}
@@ -29,7 +29,10 @@ def main() -> None:
         print(f"\n{algo_name}")
 
         # Accessing the sort algo
-        sort_algo = sort_handle.resolve_method_name(method_name=algo_name)
+        if algo_name == "quick_sort":
+            sort_algo = InPlace.quick_sort
+        else:
+            sort_algo = sort_handle.resolve_method_name(method_name=algo_name)
         
         # Performing sorting in ascending order
         print(f"\nSorting Ascending Order: {algo_name}")
@@ -42,6 +45,9 @@ def main() -> None:
             raise ValueError("The list was not properly sorted in ascending order.")
         print("\nFirst 50 elements of the sorted array:")
         print(ascending_list[:50])
+
+        # Reshuffling the Input List for Quick Sort
+        random.shuffle(input_list)
 
         # Performing sorting in descending order
         print(f"\nSorting Descending Order: {algo_name}")
