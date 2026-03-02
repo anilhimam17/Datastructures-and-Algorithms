@@ -129,3 +129,27 @@ class Graph:
 
         # Updating the no of vertices
         self.no_of_vertices -= 1
+
+    # ==== Helper Functions ====
+    def get_neighbours(self, vertex_name: str) -> list[str]:
+        """Helper function that helps with Graph Traversal by providing 
+        information about the neighbour that are accessible from a given vertex."""
+
+        # Checking the vertex's existence in the Graph
+        if vertex_name not in self.vertex_map:
+            raise ValueError("The provided vertex name was not found in the Graph")
+        
+        # Accessing all the edges corresponding to the vertex
+        vertex_edges = self.adj_matrix[self.vertex_map[vertex_name]]
+        
+        # Creating the inverse map to identify the names of the Neighbour Vertices
+        vertex_inverse_map = {
+            vertex_index:vertex_name 
+            for vertex_name, vertex_index in self.vertex_map.items()
+        }
+
+        # Acessing the Inverse Map to map the return neighbouring vertex names
+        neighbour_indices = np.where(vertex_edges == 1)
+        neighbours_names = [vertex_inverse_map[vertex_index] for vertex_index in neighbour_indices[0]]
+
+        return neighbours_names
