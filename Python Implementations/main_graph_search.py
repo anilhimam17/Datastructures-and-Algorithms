@@ -1,4 +1,5 @@
 from linear_structures.stack import Stack
+from linear_structures.queue import Queue
 from non_linear_structures.graph import Graph
 from searching_algorithms.graph_search import GraphSearch
 
@@ -37,8 +38,25 @@ def main() -> None:
             explored_vertices=explored_vertices,
             frontier=frontier
         )
-
         print(f"DFS from {node} as start:\n{explored_vertices}")
+
+    print("\nViewing the Nearest Neighbours of all the vertices:")
+    for vertex in simple_graph.vertex_map.keys():
+        print(simple_graph.get_neighbours(vertex_name=vertex))
+
+    print("\nPeforming Breadth First Search on the Graph from all the existing nodes:")
+    for node in simple_graph.vertex_map.keys():
+        explored_vertices = []
+        frontier = Queue()
+        
+        # BFS
+        graph_search.breadth_first_search(
+            graph=simple_graph,
+            vertex_name=node,
+            explored_vertices=explored_vertices,
+            frontier=frontier
+        )
+        print(f"BFS from {node} as start:\n{explored_vertices}")
 
 
 if __name__ == "__main__":
