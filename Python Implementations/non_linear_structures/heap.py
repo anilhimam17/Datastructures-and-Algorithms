@@ -1,18 +1,18 @@
 from typing import Generator
 
 
-class Heap:
+class Heap[T]:
     """Provides an implementation of the heap datastructure using Python Lists."""
     
     # ==== Standard Methods ====
     def __init__(self, heap_size: int, heap_type: str = "min") -> None:
         
-        self.heap_list: list[int | None] = [None] * (heap_size + 1)
+        self.heap_list: list[T | None] = [None] * (heap_size + 1)
         self.max_heap_size = heap_size
         self.current_heap_size = 1
         self.heap_type = heap_type
 
-    def __iter__(self) -> Generator[int | None, None, None]:
+    def __iter__(self) -> Generator[T | None, None, None]:
         """Provides a iterator for the Heap using Level Order traversal."""
         
         # If the heap is only containing None
@@ -39,17 +39,17 @@ class Heap:
         # Recursive Case
         left = self.print_tree(index * 2, level=level+1, label="L-----")
         right = self.print_tree(index * 2 + 1, level=level+1, label="R-----")
-        current = "        " * level + f"{label} {self.heap_list[index]}\n"
+        current = "             " * level + f"{label} {self.heap_list[index]}\n"
 
         return right + current + left
     
     # ==== Member Methods ====
-    def peek(self) -> int | None:
+    def peek(self) -> T | None:
         """Returns the topmost element of the heap."""
         
         return self.heap_list[1]
     
-    def insert(self, new_value: int) -> None:
+    def insert(self, new_value: T, key: int = 0) -> None:
         """Inserts a new element into the heap by following the standard of a BTree.
         Important:
         - Due to the direct swapping nature of Heapify a Heap may not adhere to all
@@ -72,14 +72,15 @@ class Heap:
         # Heapifying the insertion into the list
         self._heapify_insert(
             current_index=self.current_heap_size,
-            heap_type=self.heap_type
+            heap_type=self.heap_type,
+            key=key
         )
         
         # Updating the current heap size on insertion
         self.current_heap_size += 1
         return
     
-    def extract(self) -> int:
+    def extract(self, key: int = 0) -> T:
         """Returns the root node after extracting it from the Heap. It then balances 
         the Heap through Heapify after choosing the deepest node in the Heap as the 
         successor for the extraction of root.
@@ -91,29 +92,27 @@ class Heap:
         if self.heap_list[1] is None:
             raise IndexError("The Heap is empty, add elements before extraction")
         
-        extract_node: int = 0
+        # Extracting the root node
+        extract_node: T = self.heap_list[1]
 
         # If only the root node in Heap
         if self.current_heap_size == 2:
-            extract_node = self.heap_list[1]
             self.heap_list[self.current_heap_size - 1] = None
         # If more than one node in the Heap
         else:
-            extract_node = self.heap_list[1]
-
             # Replacing the root with the deepest node
             self.heap_list[1] = self.heap_list[self.current_heap_size - 1]
             self.heap_list[self.current_heap_size - 1] = None
 
             # Heapifying to balance the new root node
-            self._heapify_extract(current_index=1)
+            self._heapify_extract(current_index=1, key=key)
         
         # Updating the Heap Size
         self.current_heap_size -= 1
         return extract_node
     
     # ==== Helper Functions ====
-    def _heapify_insert(self, current_index: int, heap_type: str) -> None:
+    def _heapify_insert(self, current_index: int, heap_type: str, key: int = 0) -> None:
         """Performs the Heapify operation to balance the nodes of the Heap
         after an insertion by Bubbling up the new value based on Heap Type."""
 
@@ -125,25 +124,39 @@ class Heap:
             return
 
         # Checking the values to ensure not unbound
-        assert isinstance(self.heap_list[parent_index], int), "Parent Node cannot be none in the middle of the Heap"
-        assert isinstance(self.heap_list[current_index], int), "Current Node cannot be none after insertion"
-
         # If Min Heap
-        if heap_type == "min" and (self.heap_list[parent_index] > self.heap_list[current_index]):  # type: ignore
-            self.heap_list[parent_index], self.heap_list[current_index] = (
-                self.heap_list[current_index], self.heap_list[parent_index]
-            )
+        if heap_type == "min":
+            if key == 0 and (self.heap_list[parent_index] > self.heap_list[current_index]):  # type: ignore
+                self.heap_list[parent_index], self.heap_list[current_index] = (
+                    self.heap_list[current_index], self.heap_list[parent_index]
+                )
+                # Recursive Case: Heapifying the Swapped New Node further (if needed)
+                self._heapify_insert(current_index=parent_index, heap_type=heap_type, key=key)
+            # Using key-th index for comparison if iterables are values in the heap
+            elif key > 0 and (self.heap_list[parent_index][key] > self.heap_list[current_index][key]):  # type: ignore
+                self.heap_list[parent_index], self.heap_list[current_index] = (
+                    self.heap_list[current_index], self.heap_list[parent_index]
+                )
+                # Recursive Case: Heapifying the Swapped New Node further (if needed)
+                self._heapify_insert(current_index=parent_index, heap_type=heap_type, key=key)
         # If Max Heap
-        if heap_type == "max" and (self.heap_list[parent_index] < self.heap_list[current_index]):  #type: ignore
-            self.heap_list[parent_index], self.heap_list[current_index] = (
-                self.heap_list[current_index], self.heap_list[parent_index]
-            )
-
-        # Recursive Case: Heapifying the Swapped New Node further (if needed)
-        self._heapify_insert(current_index=parent_index, heap_type=heap_type)
+        if heap_type == "max":
+            if key == 0 and (self.heap_list[parent_index] < self.heap_list[current_index]):  #type: ignore
+                self.heap_list[parent_index], self.heap_list[current_index] = (
+                    self.heap_list[current_index], self.heap_list[parent_index]
+                )
+                # Recursive Case: Heapifying the Swapped New Node further (if needed)
+                self._heapify_insert(current_index=parent_index, heap_type=heap_type, key=key)
+            # Using key-th index for comparison if iterables are values in the heap
+            elif key > 0 and (self.heap_list[parent_index][key] < self.heap_list[current_index][key]):  #type: ignore
+                self.heap_list[parent_index], self.heap_list[current_index] = (
+                    self.heap_list[current_index], self.heap_list[parent_index]
+                )
+                # Recursive Case: Heapifying the Swapped New Node further (if needed)
+                self._heapify_insert(current_index=parent_index, heap_type=heap_type, key=key)
         return
     
-    def _heapify_extract(self, current_index: int) -> None:
+    def _heapify_extract(self, current_index: int, key: int = 0) -> None:
         """Performs the Heapify operation to balance the nodes of the Heap 
         after an extraction by Bubbling down the new value based on the Heap Type."""
 
@@ -174,28 +187,51 @@ class Heap:
 
         # Finalising the Swap Candidate
         if self.heap_type == "min":
-            swap_item = min(candidates, key=lambda x: x[0])
+            if key == 0:
+                swap_item = min(candidates, key=lambda x: x[0])
+            else:
+                swap_item = min(candidates, key=lambda x: x[0][key])
         else:
-            swap_item = max(candidates, key=lambda x: x[0])
+            if key == 0:
+                swap_item = max(candidates, key=lambda x: x[0])
+            else:
+                swap_item = max(candidates, key=lambda x: x[0][key])
+        
+        # Accessing the Swap Child Value and Index for Heapifying
+        swap_child, swap_child_idx = swap_item
 
         # If Min Heap
         if self.heap_type == "min":
-            swap_child, swap_child_idx = swap_item
-            if swap_child < parent:
+            # If the values in the Heap are literals
+            if key == 0 and swap_child < parent:
                 self.heap_list[current_index], self.heap_list[swap_child_idx] = (
                     self.heap_list[swap_child_idx], self.heap_list[current_index]
                 )
                 # Heapifying the Swapped New Node further (if needed)
-                self._heapify_extract(current_index=swap_child_idx)
+                self._heapify_extract(current_index=swap_child_idx, key=key)
+            # If the values in the Heap are iterables
+            if key != 0 and swap_child[key] < parent[key]:  # type: ignore
+                self.heap_list[current_index], self.heap_list[swap_child_idx] = (
+                    self.heap_list[swap_child_idx], self.heap_list[current_index]
+                )
+                # Heapifying the Swapped New Node further (if needed)
+                self._heapify_extract(current_index=swap_child_idx, key=key)
         # If Max Heap
         elif self.heap_type == "max":
-            swap_child, swap_child_idx = swap_item
-            if swap_child > parent:
+            # If the values in the Heap are literals
+            if key == 0 and swap_child > parent:
                 self.heap_list[current_index], self.heap_list[swap_child_idx] = (
                     self.heap_list[swap_child_idx], self.heap_list[current_index]
                 )
                 # Heapifying the Swapped New Node further (if needed)
-                self._heapify_extract(current_index=swap_child_idx)
+                self._heapify_extract(current_index=swap_child_idx, key=key)
+            # If the values in the Heap are iterables
+            if key != 0 and swap_child[key] > parent[key]:  # type: ignore
+                self.heap_list[current_index], self.heap_list[swap_child_idx] = (
+                    self.heap_list[swap_child_idx], self.heap_list[current_index]
+                )
+                # Heapifying the Swapped New Node further (if needed)
+                self._heapify_extract(current_index=swap_child_idx, key=key)
         else:
             raise ValueError("Heap Type or Heap Structure is invalid")
 
