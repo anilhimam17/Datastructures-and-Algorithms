@@ -38,7 +38,7 @@ class GraphSearch:
         neighbour_names = graph.get_neighbours(vertex_name=vertex_name)
 
         # Adding the Neighbours into the Stack based on Explored Vertices state
-        for neighbour in neighbour_names:
+        for neighbour, _ in neighbour_names:
             if neighbour not in explored_vertices:
                 frontier.push(value=neighbour)
 
@@ -87,7 +87,7 @@ class GraphSearch:
         neighbour_names = graph.get_neighbours(vertex_name=vertex_name)
 
         # Adding the Neighbours into the Stack based on Explored Vertices state
-        for neighbour in neighbour_names:
+        for neighbour, _ in neighbour_names:
             if neighbour not in explored_vertices:
                 frontier.enqueue(value=neighbour)
 
