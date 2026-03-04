@@ -6,15 +6,21 @@ class Graph:
     of a Generalised Graph."""
 
     # ==== Standard Methods ====
-    def __init__(self) -> None:
-        self.no_of_vertices = 0
+    def __init__(self, graph_type: str = "undirected") -> None:
+        self.no_of_vertices: int = 0
         self.adj_matrix: np.ndarray = np.zeros(shape=(0, 0))
         self.vertex_map: dict[str, int] = {}
+        
+        if graph_type in ["directed", "undirected"]:
+            self.graph_type: str = graph_type
+        else:
+            raise ValueError("The provided graph type is invalid.")
 
     def __str__(self) -> str:
         """Provides a String Representation for the Graph Structure."""
 
         repr_str = (
+            f"\nGraph Type: {self.graph_type}"
             f"\nVertex Map:\n{self.vertex_map}"
             f"\nAdjacency Matrix:\n{self.adj_matrix}"
         )
@@ -38,15 +44,19 @@ class Graph:
                     (0, 1),  # Padding for a new row (vector) for new vertex
                     (0, 1)   # Padding for a new col for entire adj_matrix for new vertex  
                 ),
-                mode="constant"  # Defaults the edge values in vector to 0
+                mode="constant",  # Defaults the edge values in vector to 0
+                constant_values=(np.inf)  # Defaults to Infinite Weights for all the new edges of a vertex
             )
+
+            # Setting the edge weight to vertex loop to 0
+            self.adj_matrix[self.no_of_vertices, self.no_of_vertices] = 0
 
             # Updating the No of Vertices
             self.no_of_vertices += 1
         else:
             raise ValueError("The vertex was already in the graph")
         
-    def add_edge(self, vertex_1: str, vertex_2: str) -> None:
+    def add_edge(self, vertex_1: str, vertex_2: str, edge_weight: int = 1) -> None:
         """Adds an edge between two existing vertices by updating the Adjacency Matrix."""
         
         # Checking for the existence of both the vertices in the graph
@@ -66,8 +76,11 @@ class Graph:
         v2_idx = self.vertex_map[vertex_2]
 
         # Updating the edges
-        self.adj_matrix[v1_idx, v2_idx] = 1
-        self.adj_matrix[v2_idx, v1_idx] = 1
+        if self.graph_type == "directed":
+            self.adj_matrix[v1_idx, v2_idx] = edge_weight
+        else:
+            self.adj_matrix[v1_idx, v2_idx] = edge_weight
+            self.adj_matrix[v2_idx, v1_idx] = edge_weight
 
     def remove_edge(self, vertex_1: str, vertex_2: str) -> None:
         """Removes an edge between two existing vertices by updating the Adjacency Matrix."""
@@ -89,8 +102,11 @@ class Graph:
         v2_idx = self.vertex_map[vertex_2]
         
         # Updating the edges
-        self.adj_matrix[v1_idx, v2_idx] = 0
-        self.adj_matrix[v2_idx, v1_idx] = 0
+        if self.graph_type == "directed":
+            self.adj_matrix[v1_idx, v2_idx] = np.inf
+        else:
+            self.adj_matrix[v1_idx, v2_idx] = np.inf
+            self.adj_matrix[v2_idx, v1_idx] = np.inf
 
     def remove_vertex(self, vertex_name: str) -> None:
         """Removes an existing Vertex from the Graph by updating the Adjacency Matrix 
@@ -131,7 +147,16 @@ class Graph:
         self.no_of_vertices -= 1
 
     # ==== Helper Functions ====
-    def get_neighbours(self, vertex_name: str) -> list[str]:
+    @property
+    def vertex_inverse_map(self) -> dict[int, str]:
+        """The inverse map between vertexes and their corresponding indexes in the Adjacency Matrix."""
+
+        return {
+            vertex_index:vertex_name 
+            for vertex_name, vertex_index in self.vertex_map.items()
+        }
+
+    def get_neighbours(self, vertex_name: str) -> list[tuple[str, int]]:
         """Helper function that helps with Graph Traversal by providing 
         information about the neighbour that are accessible from a given vertex."""
 
@@ -139,17 +164,17 @@ class Graph:
         if vertex_name not in self.vertex_map:
             raise ValueError("The provided vertex name was not found in the Graph")
         
+        # Accessing the Inverse Map
+        vertex_inverse_map = self.vertex_inverse_map
+        
         # Accessing all the edges corresponding to the vertex
         vertex_edges = self.adj_matrix[self.vertex_map[vertex_name]]
         
-        # Creating the inverse map to identify the names of the Neighbour Vertices
-        vertex_inverse_map = {
-            vertex_index:vertex_name 
-            for vertex_name, vertex_index in self.vertex_map.items()
-        }
-
         # Acessing the Inverse Map to map the return neighbouring vertex names
-        neighbour_indices = np.where(vertex_edges == 1)
-        neighbours_names = [vertex_inverse_map[vertex_index] for vertex_index in neighbour_indices[0]]
+        neighbour_indices = np.where((vertex_edges != np.inf) & (vertex_edges != 0))
+        neighbours_names = [
+            (vertex_inverse_map[vertex_index], vertex_edges[vertex_index])  # type: ignore
+            for vertex_index in neighbour_indices[0]
+        ]
 
         return neighbours_names
