@@ -1,6 +1,9 @@
+from numpy import inf
+
 from linear_structures.stack import Stack
 from linear_structures.queue import Queue
 from non_linear_structures.graph import Graph
+from non_linear_structures.heap import Heap
 
 
 class GraphSearch:
@@ -104,3 +107,75 @@ class GraphSearch:
                 explored_vertices=explored_vertices,
                 frontier=frontier
             )
+
+    @staticmethod
+    def dijkstra_search(
+        graph: Graph, 
+        source_vertex: str, 
+        explored_vertices: list[str], 
+        frontier: Heap[tuple[str, int, str]],
+    ) -> list[tuple[str, tuple[float, str]]]:
+        """Performs Dijkstra's Algorithm on the given graph to indentify the
+        shortest path to all the nodes from a input source_vertex."""
+
+        # Checking the existence of the vertex
+        if source_vertex not in graph.vertex_map:
+            raise ValueError(f"The {source_vertex} does not exist in the provide graph.")
+        
+        # Shortest Paths Dictionary
+        shortest_path_digest: dict[str, tuple[float, str]] = {
+            v_name:(inf, "")
+            for v_name, _ in graph.vertex_map.items()
+        }
+
+        # Inserting the first vertex into the Heap
+        frontier.insert(new_value=(source_vertex, 0, "source"), key=1)
+        
+        # Performing the Iterative Search
+        GraphSearch._dijkstra_search_helper(
+            graph=graph,
+            explored_vertices=explored_vertices,
+            frontier=frontier,
+            shortest_paths_digest=shortest_path_digest
+        )
+
+        # Final Shortest Paths
+        shortest_paths = list(shortest_path_digest.items())
+        return shortest_paths
+
+    @staticmethod    
+    def _dijkstra_search_helper(
+            graph: Graph,
+            explored_vertices: list[str],
+            frontier: Heap[tuple[str, int, str]],
+            shortest_paths_digest:dict[str, tuple[float, str]]
+        ) -> dict[str, tuple[float, str]]:
+        """Helper function the performs the iterative search for the shortest path to 
+        all vertices from the source vertex provided in the dijkstra_search method."""
+
+        # Loop until all the cheapest paths have been explored
+        while frontier.peek() is not None: 
+
+            # Extracting the current root
+            vertex = frontier.extract(key=1)
+
+            # If the current vertex was not explored append and get neighbours for exploration
+            if vertex[0] not in explored_vertices:
+                explored_vertices.append(vertex[0])
+
+            # Accessing the components of the current vertex
+            v_name, v_cost, v_pred = vertex
+            
+            # Finding all the neighbours from the corresponding node
+            neighbour_cost_map = graph.get_neighbours(vertex_name=v_name)
+            for n_name, n_cost in neighbour_cost_map:
+                actual_cost = v_cost + n_cost
+                # If the actual cost for a neighbour is lesser than existing cost queue for exploration
+                if actual_cost <= shortest_paths_digest[n_name][0]:
+                    frontier.insert(new_value=(n_name, actual_cost, v_name), key=1)
+
+            # Extracting the next cheapest path
+            if v_cost < shortest_paths_digest[v_name][0]:
+                shortest_paths_digest[v_name] = (v_cost, v_pred)
+
+        return shortest_paths_digest
