@@ -86,7 +86,7 @@ def main() -> None:
     # Setting the Parameters for the SSSP
     source_node = "A"
     explored_vertices = []
-    frontier = Heap(heap_size=len(directed_graph.vertex_map) ** 2)
+    frontier = Heap(heap_size=directed_graph.no_of_vertices ** 2)
     
     # Dijkstra's Search
     print(f"\nApplying Dijkstra's Algorithm to find the shortest path to all nodes from Source: {source_node}")
@@ -99,6 +99,65 @@ def main() -> None:
 
     # Resulting Shortest Paths
     print("Shortest Paths:")
+    for n_name, (n_cost, n_pred) in shortest_paths:
+        print(f"\nNode: {n_name}\nPredecessor: {n_pred} | Cost: {n_cost}")
+
+    # Viewing all the weighted edges in the Graph
+    print("\nWeighted Edges in the Graph")
+    weighted_edges = directed_graph.get_graph_edges()
+    for edge in weighted_edges:
+        print(edge)
+
+    # Bellman-Ford Search with +ve weights
+    print(f"\nApplying the Bellman-Ford Algorithm to find the shortest path to all nodes from Source: {source_node}")
+    shortest_paths = graph_search.bellman_ford_search(
+        graph=directed_graph,
+        source_vertex=source_node
+    )
+
+    # Resulting Shortest Paths
+    print("\nShortest Paths:")
+    for n_name, (n_cost, n_pred) in shortest_paths:
+        print(f"\nNode: {n_name}\nPredecessor: {n_pred} | Cost: {n_cost}")
+
+    # Creating a Directed Negative Graph for the Single Source Shortest Path Problem
+    directed_neg_graph = Graph(graph_type="directed")
+    print("\nInserting 5 Vertices into the Directed Negative Graph")
+    for i in range(5):
+        directed_neg_graph.add_vertex(vertex_name=chr(i + 65))
+    print(directed_neg_graph)
+
+    # Inserting the Weighted Edges
+    edge_cost_pairs = [
+        ("A", "C", 6), ("A", "D", -6),
+        ("B", "A", 3),
+        ("C", "D", 1),
+        ("D", "B", 1),
+        ("E", "D", 2), ("E", "B", 4)
+    ]
+    print("\nInserting all the weighted edges into the Directed Negative Graph")
+    for v1, v2, w in edge_cost_pairs:
+        directed_neg_graph.add_edge(vertex_1=v1, vertex_2=v2, edge_weight=w)
+    print(directed_neg_graph)
+
+    # Setting the Parameters for the SSSP
+    source_node = "E"
+
+    # Viewing all the weighted edges in the Graph
+    print("\nWeighted Edges in the Negative Graph")
+    weighted_edges = directed_neg_graph.get_graph_edges()
+    for edge in weighted_edges:
+        print(edge)
+
+    # Bellman-Ford Search with -ve weights
+    print(f"\nApplying the Bellman-Ford Algorithm to find the shortest path to all nodes from Source (Negative Graph): {source_node}")
+    shortest_paths = graph_search.bellman_ford_search(
+        graph=directed_neg_graph,
+        source_vertex=source_node
+    )
+
+    # Resulting Shortest Paths
+    print("\nShortest Paths (Negative Graph):")
     for n_name, (n_cost, n_pred) in shortest_paths:
         print(f"\nNode: {n_name}\nPredecessor: {n_pred} | Cost: {n_cost}")
 
