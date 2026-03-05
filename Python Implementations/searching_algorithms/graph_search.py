@@ -162,6 +162,8 @@ class GraphSearch:
             # If the current vertex was not explored append and get neighbours for exploration
             if vertex[0] not in explored_vertices:
                 explored_vertices.append(vertex[0])
+            else:
+                continue
 
             # Accessing the components of the current vertex
             v_name, v_cost, v_pred = vertex
@@ -227,6 +229,10 @@ class GraphSearch:
                 elif actual_cost < shortest_path_digest[d_vertex][0]:
                     shortest_path_digest[d_vertex] = (actual_cost, s_vertex)
                     updated_cost = True
+            
+            # Early Exit from the Loop if all the shortest path have already been found in less than V-1 iterations
+            if not updated_cost:
+                break
 
         # Checking of negative cycles in the Vth Iteration
         if updated_cost:
