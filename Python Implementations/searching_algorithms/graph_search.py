@@ -179,3 +179,62 @@ class GraphSearch:
                 shortest_paths_digest[v_name] = (v_cost, v_pred)
 
         return shortest_paths_digest
+
+    @staticmethod
+    def bellman_ford_search(
+            graph: Graph,
+            source_vertex: str
+        ) -> list[tuple[str, tuple[float, str]]]:
+        """Performs the Bellman-Ford Algorithm on the given graph to indentify the
+        shortest path to all the nodes from a input source_vertex and recognises 
+        the presence of any negative cycles in the graph."""
+
+        # Intial Shortest Paths Dictionary
+        shortest_path_digest: dict[str, tuple[float, str]] = {
+            v_name:(inf, "")
+            for v_name, _ in graph.vertex_map.items()
+        }
+
+        # Setting the distance to intial vertex to 0
+        shortest_path_digest[source_vertex] = (0, "source")
+
+        # Accessing all the weighted edges in the graph
+        weighted_edges = graph.get_graph_edges()
+
+        # Iterating for a total of V-1 time for relaxation + 1 time for -ve cycle detection
+        n_iterations = graph.no_of_vertices
+        updated_cost = False
+        for i in range(n_iterations):
+            # Flag to track relaxations in an iteration of the edges
+            updated_cost = False
+
+            # Relaxing the shortest path to each vertex by iterating through all the edges
+            for weighted_edge in weighted_edges:
+
+                # Source, Destination and Cost for a respective edge
+                s_vertex, d_vertex, d_cost = weighted_edge
+                
+                # Cost to get to Source
+                s_cost = shortest_path_digest[s_vertex][0]
+
+                # Actual Cost from Source
+                actual_cost = s_cost + d_cost
+
+                # If the source vertex was not explored yet and has cost infinity no point in updating
+                if actual_cost == inf:
+                    continue
+                # Relaxing the Cost to Destination if a cheaper path was found
+                elif actual_cost < shortest_path_digest[d_vertex][0]:
+                    shortest_path_digest[d_vertex] = (actual_cost, s_vertex)
+                    updated_cost = True
+
+        # Checking of negative cycles in the Vth Iteration
+        if updated_cost:
+            print("There is a Negative Cycle present in the given Graph")
+        # Status if no negative cycles were found
+        else:
+            print("There was no Negative Cycle present in the given Graph")
+
+        # Final Shortest Paths
+        shortest_paths = list(shortest_path_digest.items())
+        return shortest_paths
