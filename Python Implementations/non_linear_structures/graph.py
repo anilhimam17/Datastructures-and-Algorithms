@@ -178,3 +178,17 @@ class Graph:
         ]
 
         return neighbours_names
+    
+    def get_graph_edges(self) -> list[tuple[str, str, float]]:
+        """Helper function that helps with Graph Traversal by providing information
+        about all the weighted edges that exist between all the vertices."""
+
+        graph_edges: list[tuple[str, str, float]] = []
+
+        # Finding all the weighted neighbours for each vertex
+        for v_name in self.vertex_map:
+            vertex_neighbours = self.get_neighbours(vertex_name=v_name)
+            vertex_edge = [(v_name, n_name, n_cost) for n_name, n_cost in vertex_neighbours]
+            graph_edges.extend(vertex_edge)
+
+        return graph_edges
