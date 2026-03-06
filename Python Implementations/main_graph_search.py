@@ -7,6 +7,7 @@ from searching_algorithms.graph_search import GraphSearch
 
 def main() -> None:
 
+    # Creating a simple undirected graph
     print("\nCreating a simple graph with 5 nodes:")
     simple_graph = Graph()
     for i in range(5):
@@ -25,6 +26,9 @@ def main() -> None:
     print("\nViewing the Nearest Neighbours of all the vertices:")
     for vertex in simple_graph.vertex_map.keys():
         print(simple_graph.get_neighbours(vertex_name=vertex))
+
+    # ============================================================
+    # Testing the Unweighted, Undirected Graph Traversal Algorithms
 
     # Initialising the Graph Search Object
     graph_search = GraphSearch()
@@ -47,6 +51,8 @@ def main() -> None:
     for vertex in simple_graph.vertex_map.keys():
         print(simple_graph.get_neighbours(vertex_name=vertex))
 
+    # ============================================================
+
     # Breadth First Search
     print("\nPeforming Breadth First Search on the Graph from all the existing nodes:")
     for node in simple_graph.vertex_map.keys():
@@ -60,6 +66,8 @@ def main() -> None:
             frontier=frontier
         )
         print(f"BFS from {node} as start:\n{explored_vertices}")
+
+    # ============================================================
 
     # Creating a Directed Graph for the Single Source Shortest Path Problem
     directed_graph = Graph(graph_type="directed")
@@ -83,6 +91,9 @@ def main() -> None:
         directed_graph.add_edge(vertex_1=v1, vertex_2=v2, edge_weight=w)
     print(directed_graph)
 
+    # ============================================================
+    # Testing the Single Source Shortest Path Algorithms
+
     # Setting the Parameters for the SSSP
     source_node = "A"
     explored_vertices = []
@@ -102,6 +113,8 @@ def main() -> None:
     for n_name, (n_cost, n_pred) in shortest_paths:
         print(f"\nNode: {n_name}\nPredecessor: {n_pred} | Cost: {n_cost}")
 
+    # ============================================================
+    
     # Viewing all the weighted edges in the Graph
     print("\nWeighted Edges in the Graph")
     weighted_edges = directed_graph.get_graph_edges()
@@ -119,6 +132,8 @@ def main() -> None:
     print("\nShortest Paths:")
     for n_name, (n_cost, n_pred) in shortest_paths:
         print(f"\nNode: {n_name}\nPredecessor: {n_pred} | Cost: {n_cost}")
+
+    # ============================================================
 
     # Creating a Directed Negative Graph for the Single Source Shortest Path Problem
     directed_neg_graph = Graph(graph_type="directed")
@@ -160,6 +175,31 @@ def main() -> None:
     print("\nShortest Paths (Negative Graph):")
     for n_name, (n_cost, n_pred) in shortest_paths:
         print(f"\nNode: {n_name}\nPredecessor: {n_pred} | Cost: {n_cost}")
+
+    # ============================================================
+    # Testing the All Source Shortest Path Algorithms
+
+    cyclic_graph = Graph(graph_type="directed")
+    print("\nInserting 4 vertices into a Directed Cyclic Graph")
+    for i in range(4):
+        cyclic_graph.add_vertex(vertex_name=chr(i + 65))
+    print(cyclic_graph)
+
+    print("\nInserting all the weighted edges into the Directed Cyclic Graph")
+    edge_pairs = [
+        ("A", "B", 8), ("A", "D", 1),
+        ("B", "C", 1),
+        ("C", "A", 4),
+        ("D", "B", 2), ("D", "C", 9)
+    ]
+    for v1, v2, w in edge_pairs:
+        cyclic_graph.add_edge(vertex_1=v1, vertex_2=v2, edge_weight=w)
+    print(cyclic_graph)
+
+    # Floyd-Warshall Algorithm
+    print("\nApplying the Floyd Warshall Algorithm to find the shortest path from all vertices to all vertices")
+    shortest_paths_matrix = graph_search.floyd_warshall_search(graph=cyclic_graph)
+    print(shortest_paths_matrix)
 
 
 if __name__ == "__main__":
