@@ -1,4 +1,4 @@
-from numpy import inf
+import numpy as np
 
 from linear_structures.stack import Stack
 from linear_structures.queue import Queue
@@ -124,7 +124,7 @@ class GraphSearch:
         
         # Shortest Paths Dictionary
         shortest_path_digest: dict[str, tuple[float, str]] = {
-            v_name:(inf, "")
+            v_name:(np.inf, "")
             for v_name, _ in graph.vertex_map.items()
         }
 
@@ -193,7 +193,7 @@ class GraphSearch:
 
         # Intial Shortest Paths Dictionary
         shortest_path_digest: dict[str, tuple[float, str]] = {
-            v_name:(inf, "")
+            v_name:(np.inf, "")
             for v_name, _ in graph.vertex_map.items()
         }
 
@@ -222,8 +222,8 @@ class GraphSearch:
                 # Actual Cost from Source
                 actual_cost = s_cost + d_cost
 
-                # If the source vertex was not explored yet and has cost infinity no point in updating
-                if actual_cost == inf:
+                # If the source vertex was not explored yet and has cost np.infinity no point in updating
+                if actual_cost == np.inf:
                     continue
                 # Relaxing the Cost to Destination if a cheaper path was found
                 elif actual_cost < shortest_path_digest[d_vertex][0]:
@@ -244,3 +244,66 @@ class GraphSearch:
         # Final Shortest Paths
         shortest_paths = list(shortest_path_digest.items())
         return shortest_paths
+    
+    @staticmethod
+    def floyd_warshall_search(
+            graph: Graph
+        ) -> np.ndarray:
+        """Performs the Floyd Warshall search algorithm to find the shortest path for 
+        all pairs of vertices."""
+
+        # Initialising the Shortest Path Matrix
+        shortest_paths_matrix = np.copy(graph.adj_matrix)
+
+        # Accessing all the source vertices in the graph
+        vertex_map = graph.vertex_map
+        source_vertices = vertex_map.keys()
+
+        # Accessing the inverse map to all the source vertices in the graph
+        inv_map = graph.vertex_inverse_map
+
+        n_iterations = graph.no_of_vertices
+        
+        # Outer Loop Loop: Iterating through each source vertex as interim
+        for i_ver in source_vertices:
+
+            # Accessing the interim location and neigbours that can be connected with interim
+            i_idx = vertex_map[i_ver]
+            i_edges = np.where(
+                (
+                    (shortest_paths_matrix[i_idx, :] != np.inf) & 
+                    (shortest_paths_matrix[i_idx, :] != 0)
+                )
+            )[0]
+
+            # Interim Loop: Iterating no of vertices times to optimise each vertice via interim
+            for s_idx in range(n_iterations):
+
+                # Shorting the iteration where Source and Interim are the same
+                if inv_map[s_idx] == i_ver:
+                    continue
+
+                # If source to interim is already inf (not discovered) can skip traversal
+                if shortest_paths_matrix[s_idx, i_idx] == np.inf:
+                    continue
+
+                # Inner Loop: Iterating through the edges corresponding to the Interim and Source
+                for n_idx in i_edges:
+
+                    # New cost via Interim to Destination
+                    new_cost = (
+                        shortest_paths_matrix[s_idx, i_idx] +
+                        shortest_paths_matrix[i_idx, n_idx]
+                    )
+
+                    # If new cost less than existing update the cost
+                    if new_cost < shortest_paths_matrix[s_idx, n_idx]:
+                        shortest_paths_matrix[s_idx, n_idx] = new_cost
+
+        # Checking for -ve cycles
+        if not all(shortest_paths_matrix.diagonal() == 0):
+            print("There was a negative cycle in the graph")
+        else:
+            print("There was no negative cycle in the graph")
+
+        return shortest_paths_matrix
