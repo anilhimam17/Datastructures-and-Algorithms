@@ -201,6 +201,38 @@ def main() -> None:
     shortest_paths_matrix = graph_search.floyd_warshall_search(graph=cyclic_graph)
     print(shortest_paths_matrix)
 
+    # ============================================================
+    # Testing the Minimum Spanning Tree Algorithms
+
+    mst_graph = Graph(graph_type="undirected")
+    print("\nInserting 5 vertices into the Un-Directed Graph for MST")
+    for i in range(5):
+        mst_graph.add_vertex(vertex_name=chr(i + 65))
+    print(mst_graph)
+
+    print("\nInserting all the weighted edges into the Un-Directed Graph for MST")
+    edge_pairs = [
+        ("A", "B", 10), ("A", "C", 20),
+        ("B", "C", 30), ("B", "D", 5),
+        ("C", "D", 15), ("C", "E", 6),
+        ("D", "E", 8)
+    ]
+    for v1, v2, w in edge_pairs:
+        mst_graph.add_edge(vertex_1=v1, vertex_2=v2, edge_weight=w)
+    print(mst_graph)
+
+    # Prim's Algorithm
+    print("\nApplying the Prim's Algorithm to find the MST")
+    frontier = Heap(heap_size=mst_graph.no_of_vertices ** 3)
+    mst_paths = graph_search.prims_algorithm(
+        graph=mst_graph,
+        frontier=frontier
+    )
+
+    # Shortest Paths
+    for path in mst_paths:
+        print(path)
+
 
 if __name__ == "__main__":
     main()
