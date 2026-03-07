@@ -1,4 +1,5 @@
 import numpy as np
+import random
 
 from linear_structures.stack import Stack
 from linear_structures.queue import Queue
@@ -307,3 +308,53 @@ class GraphSearch:
             print("There was no negative cycle in the graph")
 
         return shortest_paths_matrix
+
+    @staticmethod
+    def prims_algorithm(graph: Graph, frontier: Heap) -> list[tuple[str, tuple[float, str]]]:
+        """Performs the Prim's Algorithm to find the Minimum Spanning Tree for a given graph."""
+
+        # The Vertex Map of the Graph
+        vertex_map = graph.vertex_map
+
+        # The Inverse Vertex Map
+        inv_map = graph.vertex_inverse_map
+        
+        # Selecting a Source Vertex at Random
+        s_idx = random.randint(a=0, b=graph.no_of_vertices - 1)
+        s_ver = inv_map[s_idx]
+        print(f"The Randomly selected source for Minimum Spanning Tree was: {s_ver}")
+
+        # MST Digest
+        mst_digest = {v_name: (np.inf, "") for v_name in vertex_map.keys()}
+        
+        # Intialising the Source
+        mst_digest[s_ver] = (0, "source")
+
+        # Traversal Control: Tracking explored vertices
+        explored_vertices = []
+        frontier.insert(new_value=(s_ver, 0, "source"), key=1)
+
+        while frontier.peek() is not None:
+            c_ver, _, _ = frontier.extract(key=1)
+
+            # If the current vertex was already explored short the iteration
+            if c_ver in explored_vertices:
+                continue
+
+            # Adding current vertex to explored vertices
+            explored_vertices.append(c_ver)
+
+            # Accessing the Neighbours
+            neighbours = graph.get_neighbours(vertex_name=c_ver)
+            
+            # Iterating through the neigbours to only add unexplored vertices
+            for n_name, n_cost in neighbours:
+
+                # If a neighbour wasn't explored yet add to frontier and update mst digest
+                if n_name not in explored_vertices and n_cost < mst_digest[n_name][0]:
+                    frontier.insert(new_value=(n_name, n_cost, c_ver), key=1)
+                    mst_digest[n_name] = (n_cost, c_ver)
+
+        # Final MST Paths
+        mst_paths = list(mst_digest.items())
+        return mst_paths
