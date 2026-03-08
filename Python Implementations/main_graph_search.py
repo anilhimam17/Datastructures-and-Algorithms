@@ -223,13 +223,40 @@ def main() -> None:
 
     # Prim's Algorithm
     print("\nApplying the Prim's Algorithm to find the MST")
-    frontier = Heap(heap_size=mst_graph.no_of_vertices ** 3)
+    frontier = Heap(heap_size=mst_graph.no_of_vertices ** 2)
     mst_paths = graph_search.prims_algorithm(
         graph=mst_graph,
         frontier=frontier
     )
 
     # Shortest Paths
+    for path in mst_paths:
+        print(path)
+
+    # ============================================================
+
+    mst_graph = Graph(graph_type="undirected")
+    print("\nInserting 5 vertices into the Un-Directed Graph for MST")
+    for i in range(5):
+        mst_graph.add_vertex(vertex_name=chr(i + 65))
+    print(mst_graph)
+
+    print("\nInserting all the weighted edges into the Un-Directed Graph for MST")
+    edge_pairs = [
+        ("A", "B", 5), ("A", "C", 13), ("A", "E", 15),
+        ("B", "C", 10), ("B", "D", 8),
+        ("C", "D", 6), ("C", "E", 20)
+    ]
+    for v1, v2, w in edge_pairs:
+        mst_graph.add_edge(vertex_1=v1, vertex_2=v2, edge_weight=w)
+    print(mst_graph)
+
+    # Kruskal's Algorithm
+    print("\nApplying the Kruskal's Algorithm to find the MST")
+    mst_paths = graph_search.kruskal_algorithm(graph=mst_graph)
+
+    # Shortest Paths
+    print("\nMST Path for Kruskal's Algorithm:")
     for path in mst_paths:
         print(path)
 
