@@ -5,6 +5,7 @@ from linear_structures.stack import Stack
 from linear_structures.queue import Queue
 from non_linear_structures.graph import Graph
 from non_linear_structures.heap import Heap
+from non_linear_structures.union_find import UnionFind
 
 
 class GraphSearch:
@@ -355,6 +356,49 @@ class GraphSearch:
                     frontier.insert(new_value=(n_name, n_cost, c_ver), key=1)
                     mst_digest[n_name] = (n_cost, c_ver)
 
+        # Final MST Paths
+        mst_paths = list(mst_digest.items())
+        return mst_paths
+    
+    @staticmethod
+    def kruskal_algorithm(graph: Graph) -> list[tuple[str, float]]:
+        """Performs the Kruskal's Algorithm to find the Minimum Spanning Tree for a given graph."""
+
+        # Copying the Adjacency Matrix
+        adj_matrix = np.copy(graph.adj_matrix)
+
+        # MST Digest
+        mst_digest = {v_name: np.inf for v_name in graph.vertex_map.keys()}
+
+        # Creating the Disjoint Set
+        frontier = UnionFind(graph=graph, adj_matrix=adj_matrix, mst_digest=mst_digest)
+
+        # Accessing all the edges in the graph and sorting them
+        graph_edges = graph.get_graph_edges()
+        graph_edges.sort(key=lambda x: x[2])
+
+        # Loop Control: Iterating V - 1 Times
+        n_iterations = graph.no_of_vertices - 1
+        
+        # Total MST cost tracking
+        total_cost = 0
+
+        # Iterating through all the edges to construct the MST while avoiding loop / cycles
+        for idx, (s_ver, d_ver, cost) in enumerate(graph_edges):
+
+            # If parent aren't the same make a union only if the new edge doesn't creat a cycle
+            if frontier.find(s_ver) != frontier.find(d_ver):
+                frontier.make_union(v1=s_ver, v2=d_ver, cost=cost)
+                total_cost += cost
+
+                # Exit Clause
+                if idx == n_iterations:
+                    break
+
+        # MST Result
+        print(f"\nFinal Adjacency Matrix:\n{adj_matrix}")
+        print(f"\nTotal Cost: {total_cost}")
+        
         # Final MST Paths
         mst_paths = list(mst_digest.items())
         return mst_paths
