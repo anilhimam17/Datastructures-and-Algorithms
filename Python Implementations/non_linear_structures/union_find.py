@@ -1,4 +1,4 @@
-from numpy import copy, inf, ndarray
+from numpy import ndarray
 
 from non_linear_structures.graph import Graph
 
